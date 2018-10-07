@@ -1,0 +1,9 @@
+{
+  "title": "one",
+  "description": "one's description",
+  "githubRepoFullname": "@platane/thirteen",
+  "bundlePath": "./bundle.zip",
+  "image": {
+    "100x100": "img100x100.png"
+  }
+}
