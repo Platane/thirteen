@@ -9,7 +9,7 @@ const presets = [
   '@babel/preset-flow',
 ]
 
-if (process.env.NODE_ENV === 'test') {
+if (process.env.BABEL_ENV === 'node') {
   plugins.push('@babel/plugin-transform-modules-commonjs')
 }
 
