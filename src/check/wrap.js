@@ -1,4 +1,6 @@
-import { GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY } from '../config'
+const {
+  github: { GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY },
+} = require('../config')
 
 const createApp = require('github-app')
 

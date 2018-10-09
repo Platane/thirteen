@@ -7,7 +7,15 @@
     "node": "8.10"
   },
   "dependencies": {
-    "flow-aws-lambda": "1.0.3"
+    "aws-sdk": "2.326.0",
+    "debug": "4.0.1",
+    "flow-aws-lambda": "1.0.3",
+    "github-app": "4.0.1",
+    "joi": "^13.7.0",
+    "lambda-git": "0.1.2",
+    "node-zip": "1.1.1",
+    "pngjs": "3.3.3",
+    "puppeteer": "1.9.0"
   },
   "devDependencies": {
     "@babel/cli": "7.1.0",
@@ -20,17 +28,26 @@
     "@babel/preset-env": "7.1.0",
     "@babel/preset-flow": "7.0.0",
     "babel-loader": "8.0.2",
-    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
-    "clean-webpack-plugin": "^0.1.19",
+    "babel-plugin-transform-inline-environment-variables": "0.4.3",
+    "clean-webpack-plugin": "0.1.19",
     "flow-bin": "0.81.0",
     "flow-runtime": "0.17.0",
     "flow-typed": "2.5.1",
     "prettier": "1.14.3",
+    "rollup": "0.66.4",
+    "rollup-plugin-babel": "4.0.3",
+    "rollup-plugin-commonjs": "9.1.8",
+    "rollup-plugin-node-resolve": "3.4.0",
+    "tap-spec": "5.0.0",
+    "tape": "4.9.1",
     "webpack": "4.16.5",
     "webpack-cli": "3.1.0",
-    "zip-webpack-plugin": "^3.0.0"
+    "zip-webpack-plugin": "3.0.0"
   },
   "scripts": {
-    "build": "webpack --config ./script/webpack.config.js"
+    "build__": "yarn rollup --config ./script/rollup.config.js",
+    "build_": "webpack --config ./script/webpack.config.js",
+    "build": "rm -rf .build ; BABEL_ENV=node babel src --out-dir .build ; cp  package.json .build/package.json ; ( cd .build ; yarn install --production ; zip -r bundle.zip . )",
+    "test": "BABEL_ENV=node babel-node src/__tests__ | tap-spec"
   }
 }

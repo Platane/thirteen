@@ -1,4 +1,4 @@
-import { SUBMISSION_DIR_PATH } from '../../config'
+import { SUBMISSION_DIR_PATH, WORKING_DIR } from '../../config'
 
 import fs from 'fs'
 import path from 'path'
@@ -7,6 +7,7 @@ import { PNG } from 'pngjs'
 import { wrap } from '../wrap'
 import { parse, btoa } from '../parse'
 import { getPngColorDerication } from '../../service/png'
+import { upload } from '../../service/storage'
 import puppeteer from 'puppeteer'
 
 const wait = delay => new Promise(r => setTimeout(r, delay))
@@ -70,7 +71,7 @@ export const handler = wrap(async (event, github) => {
   page.on('request', request => requests.push(request.url()))
 
   await page.goto(
-    'file://' + path.resolve(process.cwd(), '.build', 'index.html')
+    'file://' + path.resolve(process.cwd(), WORKING_DIR, 'index.html')
   )
 
   await wait(500)
@@ -78,6 +79,18 @@ export const handler = wrap(async (event, github) => {
   await page.screenshot({ path: screenshotPath })
 
   await browser.close()
+
+  const key = bundleFile.sha
+
+  const screenShotUrl = await upload(
+    key +
+      '/screenshot-' +
+      Math.random()
+        .toString(16)
+        .slice(2) +
+      '.png',
+    fs.readFileSync(screenshotPath)
+  )
 
   if (errors.length > 0)
     return {
@@ -88,8 +101,6 @@ export const handler = wrap(async (event, github) => {
         text: errors.join('\n\n'),
       },
     }
-
-  console.log('---')
 
   const externalRequests = requests.filter(url => !url.startsWith('file://'))
   if (externalRequests.length > 0)
@@ -110,6 +121,7 @@ export const handler = wrap(async (event, github) => {
       output: {
         title: 'screen should be not blank',
         summary: `screen should be not blank. We detected that the screen was monochromatic after loading`,
+        images: [{ alt: 'game screenshot', image_url: screenShotUrl }],
       },
     }
 
@@ -118,6 +130,7 @@ export const handler = wrap(async (event, github) => {
     output: {
       title: "Game looks like it's not broken",
       summary: [].join('\n'),
+      images: [{ alt: 'game screenshot', image_url: screenShotUrl }],
     },
   }
 })

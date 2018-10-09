@@ -1,28 +1,18 @@
-import { SUBMISSION_DIR_PATH, SIZE_LIMIT } from '../../config'
+import { SUBMISSION_DIR_PATH, WORKING_DIR, SIZE_LIMIT } from '../../config'
 
 import path from 'path'
 import { wrap } from '../wrap'
+import { parse } from '../parse'
+import { validateSchema } from './schema'
 
 const btoa = x => Buffer.from(x, 'base64').toString('ascii')
 
 export const handler = wrap(async (event, github) => {
   const { owner, repo, pull_request_number } = event
 
-  const { data: files } = await github.pullRequests.getFiles({
-    owner,
-    repo,
-    number: pull_request_number,
-  })
+  const { files, dir, ...res } = await parse(event, github)
 
   // 1
-
-  const subdir = path
-    .parse(path.relative(SUBMISSION_DIR_PATH, files[0].filename))
-    .dir.split('/')
-    .filter(Boolean)[0]
-
-  const dir = path.join(SUBMISSION_DIR_PATH, subdir)
-
   if (!files.every(({ filename }) => path.normalize(filename).startsWith(dir)))
     return {
       conclusion: 'failure',
@@ -33,13 +23,7 @@ export const handler = wrap(async (event, github) => {
     }
 
   // 2
-
-  const manifestFile = files.find(
-    ({ filename }) =>
-      path.normalize(filename) === path.join(dir, 'manifest.json')
-  )
-
-  if (!manifestFile)
+  if (!res.manifest)
     return {
       conclusion: 'failure',
       output: {
@@ -49,62 +33,36 @@ export const handler = wrap(async (event, github) => {
     }
 
   // 3
-
-  const manifest = await github.gitdata
-    .getBlob({
-      owner,
-      repo,
-      file_sha: manifestFile.sha,
-    })
-    .then(({ data: { content } }) => JSON.parse(btoa(content)))
-    .catch(() => null)
-
-  if (!manifest)
+  const { value: manifest, error } = validateSchema(res.manifest, {
+    github_user_login: owner.login,
+  })
+  if (error)
     return {
       conclusion: 'failure',
       output: {
-        title: 'Should contain a manifest.json file',
-        summary: `Should contain a manifest.json file with valid JSON format`,
-      },
-    }
-
-  // 4
-
-  if (typeof manifest.title !== 'string')
-    return {
-      conclusion: 'failure',
-      output: {
-        title: 'manifest.json should contains "title"',
-        summary: `manifest.json should contains "title"`,
+        title: 'manifest.json should respect the schema',
+        summary: `manifest.json should respect the schema`,
+        text: error.details
+          .map(({ message, path }) => `- ${message}   at [${path.join(', ')}]`)
+          .join('\n'),
       },
     }
 
   // 5
-
-  if (typeof manifest.githubRepoFullname !== 'string')
-    return {
-      conclusion: 'failure',
-      output: {
-        title: 'manifest.json should contains "githubRepoFullname"',
-        summary: `manifest.json should contains "githubRepoFullname"`,
-      },
-    }
-
-  // 5
-
-  const bundleFile =
-    manifest.bundlePath &&
-    files.find(
-      ({ filename }) =>
-        path.normalize(filename) === path.join(dir, manifest.bundlePath)
-    )
+  const bundleFile = files.find(
+    ({ filename }) =>
+      path.normalize(filename) === path.join(dir, manifest.bundle_path)
+  )
 
   if (!bundleFile)
     return {
       conclusion: 'failure',
       output: {
-        title: 'manifest.json should contains "bundlePath"',
-        summary: `manifest.json should contains "bundlePath" which point to the bundle`,
+        title: 'manifest.json bundle_path should link to a zip file',
+        summary: [
+          `manifest.json bundle_path should link to a zip file.`,
+          `Could not find anything at ${manifest.bundle_path}`,
+        ].join('\n'),
       },
     }
 
@@ -124,7 +82,7 @@ export const handler = wrap(async (event, github) => {
         title: `bundle should be smaller than ${SIZE_LIMIT} o`,
         summary: [
           `bundle should be smaller than ${SIZE_LIMIT} o`,
-          `The bundle is foudn to have a size of ${bundle.size}`,
+          `The bundle is found to have a size of ${bundle.size}`,
         ].join('\n'),
       },
     }

@@ -1,4 +1,6 @@
-import { GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY } from './config'
+const {
+  github: { GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY },
+} = require('./config')
 
 import type { APIGatewayEvent, ProxyResult } from 'flow-aws-lambda'
 import type { Event, File } from './type'
@@ -9,6 +11,7 @@ const createApp = require('github-app')
 
 const tasks = {
   manifest: require('./check/manifest'),
+  deploy: require('./check/deploy'),
   exec: require('./check/exec'),
   // images: require('./check/images'),
 }
