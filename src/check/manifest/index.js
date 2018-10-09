@@ -1,4 +1,4 @@
-import { SUBMISSION_DIR_PATH } from '../../config'
+import { SUBMISSION_DIR_PATH, SIZE_LIMIT } from '../../config'
 
 import path from 'path'
 import { wrap } from '../wrap'
@@ -74,8 +74,8 @@ export const handler = wrap(async (event, github) => {
     return {
       conclusion: 'failure',
       output: {
-        title: 'manifest.json should contains a title',
-        summary: `manifest.json should contains a title`,
+        title: 'manifest.json should contains "title"',
+        summary: `manifest.json should contains "title"`,
       },
     }
 
@@ -85,8 +85,47 @@ export const handler = wrap(async (event, github) => {
     return {
       conclusion: 'failure',
       output: {
-        title: 'manifest.json should contains a githubRepoFullname',
-        summary: `manifest.json should contains a githubRepoFullname`,
+        title: 'manifest.json should contains "githubRepoFullname"',
+        summary: `manifest.json should contains "githubRepoFullname"`,
+      },
+    }
+
+  // 5
+
+  const bundleFile =
+    manifest.bundlePath &&
+    files.find(
+      ({ filename }) =>
+        path.normalize(filename) === path.join(dir, manifest.bundlePath)
+    )
+
+  if (!bundleFile)
+    return {
+      conclusion: 'failure',
+      output: {
+        title: 'manifest.json should contains "bundlePath"',
+        summary: `manifest.json should contains "bundlePath" which point to the bundle`,
+      },
+    }
+
+  const bundle = await github.gitdata
+    .getBlob({
+      owner,
+      repo,
+      file_sha: bundleFile.sha,
+    })
+    .then(({ data }) => data)
+    .catch(() => null)
+
+  if (!bundle.size > SIZE_LIMIT)
+    return {
+      conclusion: 'failure',
+      output: {
+        title: `bundle should be smaller than ${SIZE_LIMIT} o`,
+        summary: [
+          `bundle should be smaller than ${SIZE_LIMIT} o`,
+          `The bundle is foudn to have a size of ${bundle.size}`,
+        ].join('\n'),
       },
     }
 
@@ -97,8 +136,9 @@ export const handler = wrap(async (event, github) => {
       summary: [
         '* Every files are located inside a new submission directory',
         '* Contains a valid manifest.json',
-        '* Manifest.json contains a title',
-        '* Manifest.json contains a githubRepoFullname, which links to a valid github repository',
+        '* Manifest.json contains "title"',
+        '* Manifest.json contains "githubRepoFullname", which links to a valid github repository',
+        '* Manifest.json contains "bundlePath", which links to a bundle file smaller enought',
       ].join('\n'),
     },
   }

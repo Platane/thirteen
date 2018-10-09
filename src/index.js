@@ -9,22 +9,18 @@ const createApp = require('github-app')
 
 const tasks = {
   manifest: require('./check/manifest'),
+  exec: require('./check/exec'),
   // images: require('./check/images'),
-  // exec: require('./check/exec'),
 }
 
 const execTask = taskname => event => tasks[taskname].handler(event)
 
 export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
-  debug('info')('receive aws event: %j', e)
-
   const event: Event = JSON.parse(e.body)
 
-  debug('info')('receive gh event: %j', event)
-
-  if (event.pull_request.state !== 'open') return
-
-  if (!event.pull_request.labels.some(({ name }) => name === LABEL_NAME)) return
+  // if (event.pull_request.state !== 'open') return
+  //
+  // if (!event.pull_request.labels.some(({ name }) => name === LABEL_NAME)) return
 
   const github = await createApp({
     id: GITHUB_APP_ID,
@@ -44,12 +40,12 @@ export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
     Object.keys(tasks)
 
       // if the run already exists for this commit, don't recreate it
-      .filter(
-        taskname =>
-          !check_runs.some(
-            run => run.app.id === GITHUB_APP_ID && run.name === taskname
-          )
-      )
+      // .filter(
+      //   taskname =>
+      //     !check_runs.some(
+      //       run => run.app.id === GITHUB_APP_ID && run.name === taskname
+      //     )
+      // )
 
       // create a test run for every task
       // exec the task
