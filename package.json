@@ -45,9 +45,10 @@
     "zip-webpack-plugin": "3.0.0"
   },
   "scripts": {
-    "build__": "yarn rollup --config ./script/rollup.config.js",
-    "build_": "webpack --config ./script/webpack.config.js",
-    "build": "rm -rf .build ; BABEL_ENV=node babel src --out-dir .build ; cp  package.json .build/package.json ; ( cd .build ; yarn install --production ; zip -r bundle.zip . )",
+    "build___": "yarn rollup --config ./script/rollup.config.js",
+    "build": "webpack --config ./script/webpack.config.js",
+    "build__": "rm -rf .build ; BABEL_ENV=node babel src --out-dir .build ; cp  package.json .build/package.json ; ( cd .build ; yarn install --production ; zip -r bundle.zip . )",
+    "deploy": "./infrastructure/deploy.sh",
     "test": "BABEL_ENV=node babel-node src/__tests__ | tap-spec"
   }
 }

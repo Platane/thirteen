@@ -5,8 +5,11 @@ Globals:
   Function:
     Handler: index.handler
     Runtime: nodejs8.10
-    Timeout: 3
-    MemorySize: 128
+    Timeout: 30
+    MemorySize: 256
+    Environment:
+      Variables:
+        DEBUG: info
 
 Resources:
   lambda:

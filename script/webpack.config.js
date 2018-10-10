@@ -20,6 +20,11 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto',
+      },
+      {
         exclude: /node_modules\/(?!(@october)\/).*/,
         test: /\.(js)$/,
         use: 'babel-loader',

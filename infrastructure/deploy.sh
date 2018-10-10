@@ -6,8 +6,6 @@ export STACKNAME="thirteen-bot"
 
 yarn build
 
-echo 'yolo'
-
 # package app + deploy
 aws cloudformation package \
   --template-file ./infrastructure/template.yml \
