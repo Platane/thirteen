@@ -1,4 +1,5 @@
 import path from 'path'
+import Zip from 'node-zip'
 import { SIZE_LIMIT } from '../config'
 
 export const stepName = 'manifest-bundle'
@@ -19,23 +20,19 @@ export const exec = async ctx => {
   /**
    * report
    */
-  ctx.runResult[runName].results.push(
-    {
-      success: !!bundleFile,
-      label: `manifest.json should link to a bundle file`,
-    },
-    {
-      success: bundleFile && bundleFile.size <= SIZE_LIMIT,
-      label: `bundle size should be less than ${SIZE_LIMIT}o`,
-    }
-  )
+  ctx.runResult[runName].results.push({
+    success: !!bundleFile,
+    label: `manifest.json should link to a bundle file`,
+  })
 
-  if (!bundleFile || bundleFile.size > SIZE_LIMIT) return ctx
+  if (!bundleFile) return ctx
 
   /**
    * get the bundle file blob
    */
-  const bundleB64 =
+  const {
+    data: { content: bundleB64, size },
+  } =
     bundleFile &&
     (await ctx.github.gitdata
       .getBlob({
@@ -43,8 +40,17 @@ export const exec = async ctx => {
         repo: ctx.repo,
         file_sha: bundleFile.sha,
       })
-      .then(({ data: { content } }) => content)
       .catch(() => null))
+
+  /**
+   * report
+   */
+  ctx.runResult[runName].results.push({
+    success: size <= SIZE_LIMIT,
+    label: `bundle size should be less than ${SIZE_LIMIT}o`,
+    details: `bundle size is ${size}o`,
+  })
+  if (size > SIZE_LIMIT) return ctx
 
   /**
    * unzip the bundle
@@ -64,10 +70,18 @@ export const exec = async ctx => {
       label: 'bundle should be a valid zip file',
     },
     {
-      success: bundleFiles && !!bundleFiles[ctx.manifest.bundle_index],
+      success:
+        bundleFiles &&
+        Object.keys(bundleFiles).some(
+          x => path.normalize(ctx.manifest.bundle_index) === path.normalize(x)
+        ),
       label: 'bundle should contain a index file',
+      details:
+        `according to the manifest, the index is named ${
+          ctx.manifest.bundle_index
+        } \nfound: \n` + Object.keys(bundleFiles).join('\n'),
     }
   )
 
-  return { ...ctx, bundleFiles }
+  return { ...ctx, bundleSha: bundleFile.sha, bundleFiles }
 }

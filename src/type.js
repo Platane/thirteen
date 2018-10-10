@@ -22,6 +22,7 @@ export type Label = {
 
 export type PullRequest = {
   id: number,
+  labels: Label[],
   state: 'closed' | 'open',
   title: string,
   head: Commit,

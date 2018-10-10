@@ -50,9 +50,11 @@ export const exec = async ctx => {
     {
       success: !error,
       label: 'manifest.json should respect the schema',
-      details: error.details.map(
-        ({ message, path }) => `- ${message}   at [${path.join(', ')}]`
-      ),
+      details:
+        error &&
+        error.details
+          .map(({ message, path }) => `- ${message}   at [${path.join(', ')}]`)
+          .join('\n'),
     }
   )
 

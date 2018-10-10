@@ -11,16 +11,25 @@ const originalSteps = [
   require('./step/manifest-bundle'),
   require('./step/manifest-read'),
   require('./step/read-dir'),
+  require('./step/deploy'),
 ]
 
 const extractRunNames = steps => [
   ...new Set(steps.map(s => s.runName).filter(Boolean)),
 ]
 
-const formatOutput = runName => results => ({
+const formatOutput = runName => ({ results }) => ({
   title: '',
   summary: results
-    .map(({ success, label }) => `${success ? 'v' : 'x'}  ${label}`)
+    .map(({ success, label, details }) => {
+      return [
+        '-',
+        success ? '✓' : '×',
+        label,
+
+        details ? ('\n' + details).replace(/\n/g, '\n  >') : '',
+      ].join(' ')
+    })
     .join('\n'),
 })
 
@@ -108,7 +117,7 @@ const execSteps = github => async event => {
             completed_at: new Date().toISOString(),
             status: 'completed',
             conclusion: 'failure',
-            output: formatOutput(runResult[runName]),
+            output: formatOutput(runName)(runResult[runName]),
           })
         )
       )
@@ -127,7 +136,7 @@ const execSteps = github => async event => {
         completed_at: new Date().toISOString(),
         status: 'completed',
         conclusion: 'success',
-        output: formatOutput(runResult[runName]),
+        output: formatOutput(runName)(runResult[runName]),
       })
   }
 

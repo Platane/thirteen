@@ -2,6 +2,19 @@ const plugins = [
   '@babel/plugin-proposal-class-properties',
   '@babel/plugin-proposal-object-rest-spread',
   '@babel/plugin-proposal-export-namespace-from',
+  [
+    'transform-inline-environment-variables',
+    {
+      include: [
+        'AWS_ACCESS_KEY_ID',
+        'AWS_SECRET_ACCESS_KEY',
+        'AWS_DEFAULT_REGION',
+
+        'GITHUB_APP_ID',
+        'GITHUB_APP_PRIVATE_KEY',
+      ],
+    },
+  ],
 ]
 
 const presets = [
