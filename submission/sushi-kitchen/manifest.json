@@ -1,0 +1,13 @@
+{
+  "title": "sushi kitchen",
+  "description": "sushi kitchen description",
+  "github_repository": "platane/js13k-2018",
+  "authors": [
+    {
+      "twitter": "platane_",
+      "github": "platane"
+    }
+  ],
+  "bundle_path": "bundle.zip",
+  "bundle_index": "index.html"
+}
