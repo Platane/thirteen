@@ -16,12 +16,19 @@ export const exec = async ctx => {
     Object.keys(ctx.bundleFiles).map(async filename => {
       const { _data } = ctx.bundleFiles[filename]
 
+      console.log(ctx.bundleFiles[filename])
+      console.log(_data)
+
       const isIndex =
         path.normalize(filename) === path.normalize(ctx.manifest.bundle_index)
 
       const key = path.join(ctx.bundleSha, isIndex ? 'index.html' : filename)
 
-      const url = await upload(key, btoa(_data))
+      const url = await upload(
+        key,
+        btoa(_data),
+        isIndex ? { ContentType: 'text/html' } : undefined
+      )
 
       if (isIndex) indexUrl = url
     })

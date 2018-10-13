@@ -7,7 +7,7 @@
     "node": "8.10"
   },
   "dependencies": {
-    "aws-sdk": "2.331.0",
+    "aws-sdk": "2.334.0",
     "flow-aws-lambda": "1.0.3",
     "github-app": "4.0.1",
     "joi": "13.7.0",
@@ -26,7 +26,7 @@
     "babel-loader": "8.0.4",
     "babel-plugin-transform-inline-environment-variables": "0.4.3",
     "clean-webpack-plugin": "0.1.19",
-    "flow-bin": "0.82.0",
+    "flow-bin": "0.83.0",
     "flow-runtime": "0.17.0",
     "flow-typed": "2.5.1",
     "prettier": "1.14.3",
@@ -42,7 +42,7 @@
   },
   "scripts": {
     "build": "webpack --config ./script/webpack.config.js",
-    "deploy": "./infrastructure/deploy.sh",
+    "deploy": "( cd .. ; ./infrastructure/deploy.sh )",
     "test": "BABEL_ENV=node babel-node src/__tests__ | tap-spec"
   }
 }

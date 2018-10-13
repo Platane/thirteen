@@ -13,7 +13,6 @@ export const upload = async (key, body, options = {}) => {
       Key: key,
       Body: body,
       ACL: 'public-read',
-      ContentType: 'image/*',
       ...options,
     })
     .promise()

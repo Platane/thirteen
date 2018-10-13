@@ -16,7 +16,7 @@ const originalSteps = [
 export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
   const event: Event = JSON.parse(e.body)
 
-  console.log(event)
+  console.log(event.pull_request.labels)
 
   /**
    * ignore some cases

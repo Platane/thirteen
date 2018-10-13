@@ -15,7 +15,7 @@ Resources:
   lambda:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../.build/bundle.zip
+      CodeUri: ../bot/.build/bundle.zip
       Events:
         GetResource:
           Type: Api

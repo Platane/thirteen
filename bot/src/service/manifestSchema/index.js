@@ -13,7 +13,15 @@ const schema = Joi.object().keys({
     .uri({ allowRelative: true })
     .required(),
 
-  postmortem_url: Joi.string().uri({ allowRelative: true }),
+  postmortem_url: Joi.string().uri({
+    scheme: [/https?/],
+  }),
+
+  categories: Joi.array().items(
+    Joi.string()
+      .lowercase()
+      .valid('All', 'Desktop', 'Mobile', 'Server', 'WebXR')
+  ),
 
   authors: Joi.array()
     .items(
@@ -27,6 +35,9 @@ const schema = Joi.object().keys({
             .trim()
             .replace(/^@/, ''),
           email: Joi.string().email(),
+          website: Joi.string().uri({
+            scheme: [/https?/],
+          }),
         })
         .or('name', 'twitter', 'github')
     )

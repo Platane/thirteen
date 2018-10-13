@@ -4,11 +4,14 @@ set -e
 
 export STACKNAME="thirteen-bot"
 
-yarn build
+(cd bot ; yarn build )
+
+rm -rf .build
+mkdir .build
 
 # package app + deploy
 aws cloudformation package \
-  --template-file ./infrastructure/template.yml \
+  --template-file infrastructure/template.yml \
   --s3-bucket dunelm-template-adsiasdiias123 \
   --output-template-file .build/packaged-template.yml
 

@@ -5,3 +5,5 @@ lib
 dist
 .build
 flow-typed
+.cache/
+public
