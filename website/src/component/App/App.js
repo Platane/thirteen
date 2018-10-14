@@ -7,7 +7,7 @@ import { Layout } from '~/component/Layout'
 
 export const App = (props: { routerKey: string }) => (
   <Layout title="HTML5 and JavaScript Game Development Competition in just 13 kB">
-    <Content />
+    <Content {...props} />
   </Layout>
 )
 

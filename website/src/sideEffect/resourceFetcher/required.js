@@ -29,12 +29,13 @@ const selectRequired = createSelector(
       },
 
       // edition
-      editionSlug && {
-        resourceName: 'entries',
-        key: `entries/${editionSlug}`,
-        editionSlug,
-        category,
-      },
+      !entrySlug &&
+        editionSlug && {
+          resourceName: 'entries',
+          key: `entries/${editionSlug}`,
+          editionSlug,
+          category,
+        },
     ].filter(Boolean): any)
 )
 

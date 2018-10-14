@@ -6,7 +6,7 @@ import { GRAPHQL_ENDPOINT } from '~/config'
 export const resourceName = 'entry'
 
 export const isInCache = (state, { entrySlug }) =>
-  !!state.entryBySlug[entrySlug]
+  !!(state.entryBySlug[entrySlug] && state.entryBySlug[entrySlug].description)
 
 export const pushInCache = (state, { entrySlug }, res) => ({
   ...state,

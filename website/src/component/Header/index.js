@@ -20,7 +20,7 @@ export const Header = () => (
       <ul>
         {links.map(link => (
           <li key={link.href}>
-            <a href={link.href}>{link.label}</a>
+            <Link href={link.href}>{link.label}</Link>
           </li>
         ))}
       </ul>

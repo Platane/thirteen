@@ -20,7 +20,9 @@ export const pushInCache = (state, { editionSlug }, entries) => {
 
   const entryBySlug = { ...state.entryBySlug }
 
-  entries.items.forEach(x => (entryBySlug[x.slug] = x))
+  entries.items.forEach(x => {
+    entryBySlug[x.slug] = entryBySlug[x.slug] || x
+  })
 
   return {
     ...state,
