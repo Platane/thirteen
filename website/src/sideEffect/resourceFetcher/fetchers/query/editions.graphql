@@ -1,0 +1,12 @@
+query editions($cursor: String) {
+  editions(cursor: $cursor) {
+    items {
+      slug
+      categories {
+        items
+      }
+    }
+    nextCursor
+    nItem
+  }
+}

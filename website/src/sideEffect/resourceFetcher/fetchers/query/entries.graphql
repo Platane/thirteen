@@ -1,0 +1,9 @@
+query entries($editions: [String], $categories: [String], $cursor: String) {
+  entries(editions: $editions, categories: $categories, cursor: $cursor) {
+    items {
+      ...cardEntry
+    }
+    nextCursor
+    nItem
+  }
+}

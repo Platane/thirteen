@@ -17,6 +17,6 @@ const entries_ = (_, { offset, limit, categories, editions }, ctx) => {
   }
 }
 
-export const entries = withCursor({ editions: null, categories: null }, 50)(
+export const entries = withCursor({ editions: null, categories: null }, 512)(
   entries_
 )

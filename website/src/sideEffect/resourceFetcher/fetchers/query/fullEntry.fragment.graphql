@@ -1,0 +1,20 @@
+fragment fullEntry on Entry {
+  slug
+  title
+  description
+  github_repository
+  categories
+  authors {
+    name
+    github
+    twitter
+    email
+  }
+  image {
+    small
+    big
+  }
+  edition {
+    slug
+  }
+}

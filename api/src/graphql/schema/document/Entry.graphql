@@ -14,6 +14,8 @@ type Entry {
   title: String!
   description: String!
 
+  categories: [Category]!
+
   authors: [Author]!
 
   github_repository: String!

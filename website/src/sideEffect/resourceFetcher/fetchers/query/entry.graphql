@@ -1,0 +1,5 @@
+query entry($entrySlug: String!) {
+  singleEntry(slug: $entrySlug) {
+    ...fullEntry
+  }
+}

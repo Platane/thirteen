@@ -1,0 +1,11 @@
+fragment cardEntry on Entry {
+  slug
+  title
+  categories
+  authors {
+    name
+  }
+  image {
+    small
+  }
+}
