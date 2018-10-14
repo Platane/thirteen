@@ -6,6 +6,8 @@ export STACKNAME="thirteen-bot"
 
 (cd bot ; yarn build )
 
+(cd api ; yarn build )
+
 rm -rf .build
 mkdir .build
 

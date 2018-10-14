@@ -12,13 +12,29 @@ Globals:
         DEBUG: info
 
 Resources:
-  lambda:
+  githubWebhook:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../bot/.build/bundle.zip
       Events:
-        GetResource:
+        webhook:
           Type: Api
           Properties:
             Path: /webhook
             Method: POST
+
+  graphql:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../api/.build/bundle.zip
+      Events:
+        graphql:
+          Type: Api
+          Properties:
+            Path: /graphql
+            Method: POST
+        graphiql:
+          Type: Api
+          Properties:
+            Path: /graphiql
+            Method: GET

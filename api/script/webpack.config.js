@@ -11,7 +11,7 @@ module.exports = {
     __dirname: false,
   },
   devtool: false,
-  entry: { index: path.resolve(__dirname, '../src/index') },
+  entry: { index: path.resolve(__dirname, '../src/lambda') },
   output: {
     filename: '[name].js',
     path: buildDir,

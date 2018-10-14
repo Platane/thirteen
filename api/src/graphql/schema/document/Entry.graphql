@@ -1,0 +1,22 @@
+type Author {
+  name: String
+  github: String
+  twitter: String
+  website: String
+  email: String
+}
+
+type Entry {
+  slug: ID!
+
+  edition: Edition!
+
+  title: String!
+  description: String!
+
+  authors: [Author]!
+
+  github_repository: String!
+
+  image: Image!
+}

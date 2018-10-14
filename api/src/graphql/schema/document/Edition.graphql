@@ -1,0 +1,12 @@
+type Edition {
+  year: String!
+  slug: String!
+  entries(
+    slugs: [String]
+    categories: [String]
+    limit: Int
+    cursor: String
+  ): CursoredEntries
+
+  categories(limit: Int, cursor: String): CursoredCategory
+}
