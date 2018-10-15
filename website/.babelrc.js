@@ -6,7 +6,7 @@ const plugins = [
   [
     'transform-inline-environment-variables',
     {
-      include: ['PORT'],
+      include: ['PORT', 'GRAPHQL_ENDPOINT', 'APP_BASENAME', 'APP_ORIGIN'],
     },
   ],
   ['babel-plugin-module-resolver', { alias: { '~': './src' } }],

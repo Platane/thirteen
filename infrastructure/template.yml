@@ -33,8 +33,39 @@ Resources:
           Properties:
             Path: /graphql
             Method: POST
+        graphqlOptions:
+          Type: Api
+          Properties:
+            Path: /graphql
+            Method: OPTIONS
         graphiql:
           Type: Api
           Properties:
             Path: /graphiql
             Method: GET
+
+
+  staticAssetBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods:
+              - GET
+            AllowedOrigins:
+              - '*'
+      WebsiteConfiguration:
+        ErrorDocument: index.html
+        IndexDocument: index.html
+
+Outputs:
+  graphqlEndpoint:
+    Description: 'graphql endpoint URL'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/graphql'
+  s3Url:
+    Description: 'bucket public access url'
+    Value: !Sub 'http://${staticAssetBucket}.s3-website-${AWS::Region}.amazonaws.com'
+  bucketName:
+    Description: 'static asset bucket name'
+    Value: !Ref staticAssetBucket

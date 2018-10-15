@@ -17,6 +17,7 @@ export default router => {
     },
   }))
 
+  router.options('/graphql', () => (ctx.body = 'ok'))
   router.post('/graphql', koaBody(), graphqlMiddleware)
   router.get('/graphql', graphqlMiddleware)
 

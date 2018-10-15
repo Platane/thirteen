@@ -1,10 +1,3 @@
-// import Serve from 'lambda-serve'
-//
-//
-// app.proxy = true
-//
-// export const handler = Serve(app.callback())
-
 import fs from 'fs'
 import serverless from 'serverless-http'
 import { SOURCE_PATH } from './config'
@@ -15,11 +8,16 @@ const entries = JSON.parse(fs.readFileSync(SOURCE_PATH).toString())
 const koa = require('koa')
 
 const app = createApp()
-// construct your app as normal
-// const app = new koa()
-// // register your middleware as normal
-// app.use(ctx => console.log(ctx))
 
-export const handler = serverless(app)
+const headers = {
+  'Content-Type': 'application/json',
+  'access-control-allow-headers': 'Content-Type,Authorization,X-Api-Key',
+  'access-control-allow-methods': 'OPTIONS,GET,PUT',
+  'access-control-allow-origin': '*',
+}
 
-// export const handler = event => console.log(event, entries)
+export const handler = serverless(app, {
+  response: (response, event, context) => {
+    response.headers = { ...(response.headers || {}), ...headers }
+  },
+})
