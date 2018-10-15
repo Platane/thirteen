@@ -1,9 +1,9 @@
 fragment fullEntry on Entry {
   slug
   title
+  categories
   description
   github_repository
-  categories
   authors {
     name
     github

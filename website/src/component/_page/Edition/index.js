@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Edition as SimpleEdition } from './Edition'
+import { preloadEntry } from '~/store/action'
 
 import {
   selectEditions,
@@ -12,10 +13,13 @@ import {
 
 import type { State } from '~/store/type'
 
-export const Edition = connect((state: State) => ({
-  currentCategory: selectCurrentCategory(state),
-  currentEditionSlug: selectCurrentEditionSlug(state),
-  entries: selectCurrentEntries(state) || [],
-  categories: selectCurrentEditionCategories(state) || [],
-  editions: selectEditions(state) || [],
-}))(SimpleEdition)
+export const Edition = connect(
+  (state: State) => ({
+    currentCategory: selectCurrentCategory(state),
+    currentEditionSlug: selectCurrentEditionSlug(state),
+    entries: selectCurrentEntries(state) || [],
+    categories: selectCurrentEditionCategories(state) || [],
+    editions: selectEditions(state) || [],
+  }),
+  { preloadEntry }
+)(SimpleEdition)

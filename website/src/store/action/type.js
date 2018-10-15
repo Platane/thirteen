@@ -10,6 +10,12 @@ export type Action =
       keys: any | null,
     }
   | {
+      type: 'resource:fetcher:preload',
+      resourceName: string,
+      params: Object,
+      key: string,
+    }
+  | {
       type: 'resource:fetcher:start',
       resourceName: string,
       params: Object,

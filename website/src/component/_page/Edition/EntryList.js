@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from '~/component/Link'
 
-const Entry = ({ entry }) => (
-  <article className="entry">
+const Entry = ({ entry, onMouseOver }) => (
+  <article className="entry" onMouseOver={onMouseOver}>
     <Link href={`/entry/${entry.slug}`}>
       <img src={entry.image.small} alt={entry.title} />
       <h3>{entry.title}</h3>
@@ -11,10 +11,14 @@ const Entry = ({ entry }) => (
   </article>
 )
 
-export const EntryList = ({ entries }) => (
+export const EntryList = ({ entries, onMouseOver }) => (
   <section id="entries">
     {entries.map(entry => (
-      <Entry key={entry.slug} entry={entry} />
+      <Entry
+        key={entry.slug}
+        entry={entry}
+        onMouseOver={() => onMouseOver(entry.slug)}
+      />
     ))}
   </section>
 )

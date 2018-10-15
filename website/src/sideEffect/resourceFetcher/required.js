@@ -2,6 +2,7 @@ import {
   selectCurrentEntrySlug,
   selectCurrentEditionSlug,
   selectCurrentCategory,
+  selectFetchPending,
 } from '~/store/selector'
 import { createSelector } from 'reselect'
 import { getFetcher } from './fetchers'
@@ -39,10 +40,21 @@ const selectRequired = createSelector(
     ].filter(Boolean): any)
 )
 
+const selectPreload = createSelector(
+  selectFetchPending,
+  (state: State) => state.fetch.preload,
+
+  (fetchPending, preload): { resourceName: string, key: string }[] =>
+    fetchPending ? [] : preload
+)
+
 export const selectToFetch = createSelector(
+  selectPreload,
   selectRequired,
   (state: State) => state.resource,
 
-  (required, state) =>
-    required.filter(r => !getFetcher(r.resourceName).isInCache(state, r))
+  (required, preload, state) =>
+    [...required, ...preload].filter(
+      r => !getFetcher(r.resourceName).isInCache(state, r)
+    )
 )

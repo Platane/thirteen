@@ -9,6 +9,7 @@ export const Edition = ({
   categories,
   editions,
   entries,
+  preloadEntry,
 }) => (
   <React.Fragment>
     <h2>{`Entries (${entries.length || '~'} in total)`}</h2>
@@ -21,6 +22,6 @@ export const Edition = ({
       categories={categories}
     />
 
-    <EntryList entries={entries} />
+    <EntryList entries={entries} onMouseOver={preloadEntry} />
   </React.Fragment>
 )
