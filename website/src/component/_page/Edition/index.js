@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Edition as SimpleEdition } from './Edition'
-import { preloadEntry } from '~/store/action'
+import { preloadEntry, preloadEntries } from '~/store/action'
 
 import {
   selectEditions,
@@ -21,5 +21,5 @@ export const Edition = connect(
     categories: selectCurrentEditionCategories(state) || [],
     editions: selectEditions(state) || [],
   }),
-  { preloadEntry }
+  { preloadEntry, preloadEntries }
 )(SimpleEdition)

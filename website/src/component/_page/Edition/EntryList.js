@@ -11,13 +11,13 @@ const Entry = ({ entry, onMouseOver }) => (
   </article>
 )
 
-export const EntryList = ({ entries, onMouseOver }) => (
+export const EntryList = ({ entries, preloadEntry }) => (
   <section id="entries">
     {entries.map(entry => (
       <Entry
         key={entry.slug}
         entry={entry}
-        onMouseOver={() => onMouseOver(entry.slug)}
+        onMouseOver={() => preloadEntry(entry.slug)}
       />
     ))}
   </section>

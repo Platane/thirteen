@@ -10,11 +10,16 @@ export const Edition = ({
   editions,
   entries,
   preloadEntry,
+  preloadEntries,
 }) => (
   <React.Fragment>
     <h2>{`Entries (${entries.length || '~'} in total)`}</h2>
 
-    <EditionNav currentEditionSlug={currentEditionSlug} editions={editions} />
+    <EditionNav
+      currentEditionSlug={currentEditionSlug}
+      editions={editions}
+      preloadEntries={preloadEntries}
+    />
 
     <CategoryNav
       currentEditionSlug={currentEditionSlug}
@@ -22,6 +27,6 @@ export const Edition = ({
       categories={categories}
     />
 
-    <EntryList entries={entries} onMouseOver={preloadEntry} />
+    <EntryList entries={entries} preloadEntry={preloadEntry} />
   </React.Fragment>
 )
