@@ -27,6 +27,7 @@
     "tape": "4.9.1"
   },
   "scripts": {
-    "start": "BABEL_ENV=node babel-node -e \"require('./src/index.js').create()\""
+    "start": "BABEL_ENV=node babel-node -e \"require('./src/index.js').create()\"",
+    "build": "rm -rf .build ; mkdir .build ; BABEL_ENV=node babel-node ./src/build.js"
   }
 }
