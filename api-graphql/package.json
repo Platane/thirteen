@@ -10,7 +10,6 @@
     "apollo-server-koa": "1.4.0",
     "graphql": "14.0.2",
     "graphql-tools": "4.0.1",
-    "jsdom": "12.2.0",
     "koa": "2.5.3",
     "koa-bodyparser": "4.2.1",
     "koa-router": "7.4.0",
@@ -45,7 +44,6 @@
   "scripts": {
     "build": "rm -rf .build && APP_BASENAME='/Prod/' BUILD_DIR='./' webpack --config ./script/webpack.config.js && BABEL_ENV=node babel-node ./src/service/source && cp -r ./src/graphql/schema/document/ .build/document/ && ( cd .build ; zip -ur bundle.zip entries.json document )",
     "start": "BABEL_ENV=node babel-node -e \"require('./src/index.js').create()\"",
-    "crawl": "rm -rf ../submission ; BABEL_ENV=node babel-node ./src/service/crawler",
     "source": "rm -rf .build ; mkdir .build ; BABEL_ENV=node babel-node ./src/service/source"
   }
 }
