@@ -68,4 +68,27 @@ module.exports = {
       ignored: /node_modules/,
     },
   },
+
+  optimization: {
+    splitChunks: {
+      minChunks: 2,
+      chunks: 'all',
+
+      cacheGroups: {
+        vendors: false,
+
+        /**
+         * this chunk contains the node_modules that we are not going to change any time soon
+         * and are most likely to be loaded on every page
+         */
+        vendor: {
+          name: 'vendor',
+          chunks: 'all',
+          test: /node_modules\/(react|react-dom|redux|react-redux|emotion|react-emotion|react-router)\//,
+          priority: 20,
+          enforce: true,
+        },
+      },
+    },
+  },
 }
