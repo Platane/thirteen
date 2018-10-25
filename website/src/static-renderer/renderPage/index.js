@@ -5,9 +5,9 @@ import { create as createStore } from '~/store'
 import { goTo } from '~/store/action'
 import { init as initResourceFetcher } from '~/sideEffect/resourceFetcher'
 import { waitFor } from '~/util/waitFor'
-import { renderPage } from './renderPage'
+import { renderPageState } from './renderPageState'
 
-export const render = async (url: string) => {
+export const renderPage = async (url: string) => {
   const sideEffects = [initResourceFetcher]
 
   const store = createStore(sideEffects)
@@ -16,5 +16,5 @@ export const render = async (url: string) => {
 
   await waitFor(store, state => !selectFetchPending(state))
 
-  return renderPage(store.getState())
+  return renderPageState(store.getState())
 }

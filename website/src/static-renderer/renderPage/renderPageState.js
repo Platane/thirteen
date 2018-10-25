@@ -19,7 +19,7 @@ const getScriptsForEntry = chunkName =>
     .filter(f => !f.match(/\.map$/))
     .map(f => stats.publicPath + f)
 
-export const renderPage = (state: State) => {
+export const renderPageState = (state: State) => {
   const stubStore = {
     dispatch: () => void 0,
     subscribe: () => void 0,

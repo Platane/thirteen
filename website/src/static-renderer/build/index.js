@@ -2,20 +2,18 @@ import fs from 'fs'
 import util from 'util'
 import path from 'path'
 import mkdirp from 'mkdirp'
-import { render } from '../renderer'
+import { renderPage } from '../renderPage'
 import { parallel } from './parallel'
 import { getEntries } from './getEntries'
 
-const BUILD_DIRECTORY = path.resolve(__dirname, '../../.build')
+export const BUILD_DIR = path.join(__dirname, '../../.build')
 
 export const writePage = async url => {
-  const html = await render(url)
+  const html = await renderPage(url)
 
-  const filename = path.resolve(BUILD_DIRECTORY, url, 'index.html')
+  const filename = path.resolve(BUILD_DIR, url, 'index.html')
 
-  await util
-    .promisify(mkdirp)(path.dirname(filename))
-    .catch(err => 0)
+  await util.promisify(mkdirp)(path.dirname(filename))
 
   fs.writeFileSync(filename, html)
 }

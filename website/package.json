@@ -10,7 +10,6 @@
     "start": "webpack-dev-server --mode development --config ./script/webpack.config.js",
     "prepare": "ls .build/manifest.json || ( mkdir -p .build ; echo '{}' > .build/manifest.json );ls .build/stats.json || ( mkdir -p .build ; echo '{\"namedChunkGroups\":{}}' > .build/stats.json )",
     "build": "NODE_ENV=production webpack --mode production --config ./script/webpack.config.js",
-    "build:one:page": "yarn prepare && BABEL_ENV=node yarn babel-node -e 'require(\"./src/static-renderer/renderer\").render(\"entry/2018/sushi-kitchen\").then(x=>console.log(x))'",
     "build:all:page": "yarn prepare && BABEL_ENV=node yarn babel-node -e 'require(\"./src/static-renderer\")'"
   },
   "dependencies": {
