@@ -1,54 +1,3 @@
-import fetch from 'node-fetch'
-import path from 'path'
-import fs from 'fs'
-import { JSDOM } from 'jsdom'
-
-const END_POINT = 'http://js13kgames.com'
-
-/**
- * write entries from the js13games website
- */
-export const readEntries = async subdirectory => {
-  const rawEntries = parseEntryList(
-    await readPage(`${END_POINT}/entries/${subdirectory}`)
-  )
-
-  const entries = []
-
-  for (let i = 0; i < rawEntries.length; i++) {
-    const [_, slug] = rawEntries[i].match(/entries\/([^\/]+)/)
-
-    console.log(subdirectory, `${i}/${rawEntries.length}`, slug)
-
-    const entryUrl = `${END_POINT}${rawEntries[i]}`
-    const gameUrl = entryUrl.replace('/entries/', '/games/')
-
-    const entry = parseEntry(await readPage(entryUrl))
-
-    entries.push({
-      ...entry,
-      slug,
-      game_url: gameUrl,
-      image: {
-        '100x100': gameUrl + '/__small.jpg',
-        '400x250': gameUrl + '/__big.jpg',
-      },
-    })
-  }
-
-  return entries
-}
-
-const readPage = url =>
-  fetch(url)
-    .then(x => x.text())
-    .then(page => new JSDOM(page).window.document)
-
-const parseEntryList = document =>
-  Array.from(document.querySelectorAll('article.entry')).map(
-    entry => entry.querySelector('a').href
-  )
-
 const parseGithub = url => {
   {
     const res = url.match(/github\.com\/([\w_-]+)(\/[\w_-]+)?/)
@@ -78,6 +27,7 @@ const parseGithub = url => {
 
   return {}
 }
+
 const parseTwitter = url => {
   const [_, login] = url.match(/twitter\.com\/([^\/]+)/) || []
 
@@ -96,7 +46,7 @@ const parseCategories = text => {
   return categories
 }
 
-const parseEntry = document => {
+export const parseEntry = document => {
   const content = document.querySelector('.content')
 
   const entry = {

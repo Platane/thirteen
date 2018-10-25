@@ -1,0 +1,35 @@
+{
+  "name": "thirteen-crawler",
+  "description": "...",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "8.10"
+  },
+  "dependencies": {
+    "jsdom": "12.2.0",
+    "node-fetch": "2.2.0",
+    "node-zip": "1.1.1",
+    "puppeteer": "1.9.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.1.2",
+    "@babel/core": "7.1.2",
+    "@babel/node": "7.0.0",
+    "@babel/plugin-proposal-class-properties": "7.1.0",
+    "@babel/plugin-proposal-export-namespace-from": "7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "7.0.0",
+    "@babel/plugin-transform-modules-commonjs": "7.1.0",
+    "@babel/preset-env": "7.1.0",
+    "@babel/preset-flow": "7.0.0",
+    "babel-plugin-transform-inline-environment-variables": "0.4.3",
+    "flow-bin": "0.83.0",
+    "flow-typed": "2.5.1",
+    "prettier": "1.14.3",
+    "tap-spec": "5.0.0",
+    "tape": "4.9.1"
+  },
+  "scripts": {
+    "start": "rm -rf ../submission ; BABEL_ENV=node babel-node -e \"require('./src/index.js')()\""
+  }
+}
