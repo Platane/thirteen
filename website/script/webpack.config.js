@@ -34,16 +34,11 @@ module.exports = {
       },
 
       {
-        test: [/\.bmp/, /\.gif/, /\.jpe?g/, /\.png/, /\.otf/, /\.svg/],
+        test: [/\.bmp/, /\.gif/, /\.jpe?g/, /\.png/, /\.otf/, /\.svg/, /\.css/],
         loader: 'file-loader',
         options: {
-          name: '[name].[ext]',
+          name: '[name]-[hash:8].[ext]',
         },
-      },
-
-      {
-        test: /\.css$/,
-        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
       },
     ],
   },

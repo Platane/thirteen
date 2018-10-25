@@ -19,7 +19,8 @@ export const create = (sideEffects = []) => {
 
   const enhancer = compose(...enhancers)
 
-  const initState = defaultState
+  const initState =
+    ('undefined' != typeof window && window._THIRTEEN_STATE) || defaultState
 
   const store = createStore(
     (reduce: Reducer<State, Action>),

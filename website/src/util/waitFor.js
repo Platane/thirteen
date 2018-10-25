@@ -1,5 +1,3 @@
-// @flow
-
 import type { Store } from 'redux'
 
 /**

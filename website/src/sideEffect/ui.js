@@ -12,7 +12,7 @@ export const init = (store: Store) => {
     </Provider>
   )
 
-  const donContainer = document.getElementById('app')
+  const domContainer = document.getElementById('app')
 
-  if (donContainer) render(app, donContainer)
+  if (domContainer) render(app, domContainer)
 }

@@ -1,5 +1,5 @@
 {
-  "name": "thirteen-website",
+  "name": "@thirteen/website",
   "description": "...",
   "version": "0.1.0",
   "private": true,
@@ -8,10 +8,15 @@
   },
   "scripts": {
     "start": "webpack-dev-server --mode development --config ./script/webpack.config.js",
-    "build": "NODE_ENV=production webpack --mode production --config ./script/webpack.config.js"
+    "prepare": "ls .build/manifest.json || ( mkdir -p .build ; echo '{}' > .build/manifest.json );ls .build/stats.json || ( mkdir -p .build ; echo '{\"namedChunkGroups\":{}}' > .build/stats.json )",
+    "build": "NODE_ENV=production webpack --mode production --config ./script/webpack.config.js",
+    "build:one:page": "yarn prepare && BABEL_ENV=node yarn babel-node -e 'require(\"./src/static-renderer/renderer\").render(\"entry/2018/sushi-kitchen\").then(x=>console.log(x))'",
+    "build:all:page": "yarn prepare && BABEL_ENV=node yarn babel-node -e 'require(\"./src/static-renderer\")'"
   },
   "dependencies": {
     "declarative-router": "0.1.4",
+    "emotion": "9.2.12",
+    "node-fetch": "2.2.0",
     "react": "16.5.2",
     "react-dom": "16.5.2",
     "react-redux": "5.0.7",
@@ -35,15 +40,17 @@
     "babel-plugin-transform-inline-environment-variables": "0.4.3",
     "browser-tap": "0.0.1",
     "css-loader": "1.0.0",
+    "emotion-server": "9.2.12",
     "file-loader": "2.0.0",
     "flow-bin": "0.83.0",
     "html-webpack-plugin": "3.2.0",
     "prettier": "1.14.3",
+    "serialize-javascript": "1.5.0",
     "style-loader": "0.23.1",
     "tap-spec": "5.0.0",
     "tape": "4.9.1",
     "webpack": "4.20.2",
-    "webpack-bundle-analyzer": "^3.0.2",
+    "webpack-bundle-analyzer": "3.0.2",
     "webpack-cli": "3.1.2",
     "webpack-dev-server": "3.1.9",
     "webpack-manifest-plugin": "2.0.4"
