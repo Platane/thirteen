@@ -1,21 +1,14 @@
 import React from 'react'
 import { Link } from '~/component/Link'
+import { AuthorsBlock } from './AuthorsBlock'
 
 export const Entry = ({ entry }) => (
   <article className="single-entry">
     <img src={entry && entry.image.big} alt={entry && entry.title} />
     <div className="info">
       <h2>{entry && entry.title}</h2>
-      <h3>{entry && entry.authors[0].name}</h3>
-      <ul style={{ maxWidth: '460px' }}>
-        {['twitter', 'website', 'github']
-          .filter(key => entry && key in entry.authors[0])
-          .map(key => (
-            <li key={key} className={key}>
-              <a href="/">{entry.authors[0][key]}</a>
-            </li>
-          ))}
-      </ul>
+
+      {entry && <AuthorsBlock authors={entry.authors} />}
 
       <Link
         href={entry && `/entry/${entry.slug}`}
