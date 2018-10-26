@@ -51,6 +51,7 @@ cd website/.build/
 
 aws s3 cp --no-progress --quiet --recursive \
   --acl "public-read" \
+  --cache-control 'max-age=31104000' \
   --exclude "*.html" \
   --exclude "*.json" \
   --exclude "*.css" \
@@ -73,6 +74,7 @@ done
 aws s3 cp --no-progress --quiet --recursive \
   --acl "public-read" \
   --content-encoding "gzip" \
+  --cache-control 'max-age=3600' \
   --exclude "*" \
   --include "*.html" \
   --content-type "text/html" \
@@ -81,6 +83,7 @@ aws s3 cp --no-progress --quiet --recursive \
 aws s3 cp --no-progress --quiet --recursive \
   --acl "public-read" \
   --content-encoding "gzip" \
+  --cache-control 'max-age=31104000' \
   --exclude "*" \
   --include "*.css" \
   --content-type "text/css" \
@@ -89,14 +92,26 @@ aws s3 cp --no-progress --quiet --recursive \
 aws s3 cp --no-progress --quiet --recursive \
   --acl "public-read" \
   --content-encoding "gzip" \
+  --cache-control 'max-age=31104000' \
   --exclude "*" \
   --include "*.json" \
+  --exclude "*/index.json" \
   --content-type "application/json" \
   ./gzip/ s3://$BUCKET_NAME
 
 aws s3 cp --no-progress --quiet --recursive \
   --acl "public-read" \
   --content-encoding "gzip" \
+  --cache-control 'max-age=3600' \
+  --exclude "*" \
+  --include "*/index.json" \
+  --content-type "application/json" \
+  ./gzip/ s3://$BUCKET_NAME
+
+aws s3 cp --no-progress --quiet --recursive \
+  --acl "public-read" \
+  --content-encoding "gzip" \
+  --cache-control 'max-age=31104000' \
   --exclude "*" \
   --include "*.js" \
   --content-type "application/javascript" \
