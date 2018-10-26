@@ -6,7 +6,7 @@ import { renderPage } from '../renderPage'
 import { parallel } from './parallel'
 import { getEntries } from './getEntries'
 
-export const BUILD_DIR = path.join(__dirname, '../../.build')
+export const BUILD_DIR = path.join(__dirname, '../../../.build')
 
 export const writePage = async url => {
   const html = await renderPage(url)
@@ -24,8 +24,6 @@ export const writeAllPages = async () => {
   const res = await getEntries()
 
   const urls = [
-    '',
-
     ...flat(
       res.editions.items.map(({ entries }) =>
         entries.items.map(({ slug }) => `entry/${slug}`)
@@ -33,6 +31,8 @@ export const writeAllPages = async () => {
     ),
 
     ...res.editions.items.map(({ slug }) => `entries/${slug}`),
+
+    '',
   ]
 
   await parallel(50, urls.map(url => () => console.log(url) || writePage(url)))

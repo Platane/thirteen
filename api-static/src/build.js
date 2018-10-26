@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { getFiles } from './source/getFiles'
+import { getFiles } from './source'
 import { BUILD_DIR } from './config'
 
 getFiles().forEach(({ filename, content }) =>

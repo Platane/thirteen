@@ -1,4 +1,4 @@
-import { getFiles } from './source/getFiles'
+import { getFiles } from './source'
 import http from 'http'
 import { parse as parseUrl_ } from 'url'
 import { PORT } from './config'

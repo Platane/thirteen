@@ -3,9 +3,7 @@ import path from 'path'
 import { computeSha } from './computeSha'
 import { SUBMISSION_DIR_PATH } from '../config'
 
-console.log(SUBMISSION_DIR_PATH)
-
-const readEntries = () =>
+export const readEntries = () =>
   fs.readdirSync(SUBMISSION_DIR_PATH).map(editionSlug => ({
     slug: editionSlug,
     entries: fs
@@ -38,40 +36,3 @@ const readEntries = () =>
         }
       }),
   }))
-
-const split = (arr, n) =>
-  Array.from({ length: Math.ceil(arr.length / n) }).map((_, i) =>
-    arr.slice(i * n, (i + 1) * n)
-  )
-
-const buildFiles = editions => {
-  const files = []
-
-  const index = {
-    editions: editions.map(edition => {
-      const entriesChunk = split(edition.entries, 180).map(entries => {
-        const sha = computeSha(entries.reduce((s, { sha }) => s + sha, ''))
-
-        const filename = `${edition.slug}-${sha}.json`
-
-        files.push({
-          filename,
-          content: entries,
-        })
-
-        return filename
-      })
-
-      return {
-        slug: edition.slug,
-        entriesChunk,
-      }
-    }),
-  }
-
-  files.push({ filename: 'index.json', content: index })
-
-  return files
-}
-
-export const getFiles = () => buildFiles(readEntries())
