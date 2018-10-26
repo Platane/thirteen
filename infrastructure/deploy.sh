@@ -6,7 +6,9 @@ export STACKNAME="thirteen-bot"
 
 (cd bot ; yarn build )
 
-(cd api ; yarn build )
+(cd api-graphql ; yarn build )
+
+(cd api-static ; yarn build )
 
 rm -rf .build
 mkdir .build
@@ -38,64 +40,67 @@ rm -rf website/.build/
 
 (cd website ; yarn build )
 
-# aws s3 cp --no-progress --recursive --acl "public-read" website/.build/ s3://$BUCKET_NAME
+(cd website ; yarn build:all:page )
 
-mkdir website/.build/gzip
+cp -r api-static/.build website/.build/data
 
-for filename in `ls website/.build`; do
 
-  if [[ $filename == *.html ]];
-  then
-    aws s3 cp --no-progress --acl "public-read" \
-      --content-type "text/html" \
-      "website/.build/$filename" \
-      "s3://$BUCKET_NAME/$filename"
 
-    gzip -9 -c website/.build/$filename > website/.build/gzip/$filename
-    #
-    aws s3 cp --no-progress --acl "public-read" \
-      --content-type "text/html" \
-      --content-encoding "gzip" \
-      "website/.build/gzip/$filename" \
-      "s3://$BUCKET_NAME/$filename"
-  fi
 
-  if [[ $filename == *.js ]];
-  then
-    aws s3 cp --no-progress --acl "public-read" \
-      --content-type "application/javascript" \
-      website/.build/$filename \
-      s3://$BUCKET_NAME/$filename
+cd website/.build/
 
-    gzip -9 -c website/.build/$filename > website/.build/gzip/$filename
+aws s3 cp --no-progress --quiet --recursive \
+  --acl "public-read" \
+  --exclude "*.html" \
+  --exclude "*.json" \
+  --exclude "*.css" \
+  --exclude "*.js" \
+  ./ s3://$BUCKET_NAME
 
-    aws s3 cp --no-progress --acl "public-read" \
-      --content-type "application/javascript" \
-      --content-encoding "gzip" \
-      "website/.build/gzip/$filename" \
-      "s3://$BUCKET_NAME/$filename"
-  fi
+rm -rf gzip
+mkdir gzip
 
-  if [[ $filename == *.css ]];
-  then
-    aws s3 cp --no-progress --acl "public-read" \
-      --content-type "text/css" \
-      website/.build/$filename \
-      s3://$BUCKET_NAME/$filename
 
-    gzip -9 -c website/.build/$filename > website/.build/gzip/$filename
+for file in `find -name "*.html" -or -name "*.json" -or -name "*.css" -or -name "*.js" -type f`; do
 
-    aws s3 cp --no-progress --acl "public-read" \
-      --content-type "text/css" \
-      --content-encoding "gzip" \
-      "website/.build/gzip/$filename" \
-      "s3://$BUCKET_NAME/$filename"
-  fi
+  target=$(readlink -m gzip/$file )
 
-  # if [[ -f $filename ]]; then
-  #   echo "file"
-  # fi
+  mkdir -p $(dirname $target)
 
+  gzip -9 -c $file > $target
 done
+
+aws s3 cp --no-progress --quiet --recursive \
+  --acl "public-read" \
+  --content-encoding "gzip" \
+  --exclude "*" \
+  --include "*.html" \
+  --content-type "text/html" \
+  ./gzip/ s3://$BUCKET_NAME
+
+aws s3 cp --no-progress --quiet --recursive \
+  --acl "public-read" \
+  --content-encoding "gzip" \
+  --exclude "*" \
+  --include "*.css" \
+  --content-type "text/css" \
+  ./gzip/ s3://$BUCKET_NAME
+
+aws s3 cp --no-progress --quiet --recursive \
+  --acl "public-read" \
+  --content-encoding "gzip" \
+  --exclude "*" \
+  --include "*.json" \
+  --content-type "application/json" \
+  ./gzip/ s3://$BUCKET_NAME
+
+aws s3 cp --no-progress --quiet --recursive \
+  --acl "public-read" \
+  --content-encoding "gzip" \
+  --exclude "*" \
+  --include "*.js" \
+  --content-type "application/javascript" \
+  ./gzip/ s3://$BUCKET_NAME
+
 
 echo $APP_ORIGIN

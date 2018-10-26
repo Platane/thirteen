@@ -26,7 +26,7 @@ Resources:
   graphql:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../api/.build/bundle.zip
+      CodeUri: ../api-graphql/.build/bundle.zip
       Events:
         graphql:
           Type: Api
@@ -43,7 +43,6 @@ Resources:
           Properties:
             Path: /graphiql
             Method: GET
-
 
   staticAssetBucket:
     Type: AWS::S3::Bucket
