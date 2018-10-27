@@ -2,7 +2,6 @@ import mkdirp from 'mkdirp'
 import util from 'util'
 import path from 'path'
 import fs from 'fs'
-import { computeSha } from '../util/computeSha'
 import { SUBMISSION_DIR_PATH } from '../config'
 
 export const writeSubmission = async (slug, manifest, bundleContent) => {
