@@ -8,6 +8,13 @@ const parseUrl = x => {
   return { ...u, pathname: u.pathname || '/' }
 }
 
+const headers = {
+  'Content-Type': 'application/json',
+  'access-control-allow-headers': 'Content-Type,Authorization,X-Api-Key',
+  'access-control-allow-methods': 'OPTIONS,GET,PUT',
+  'access-control-allow-origin': '*',
+}
+
 export const create = () => {
   const files = getFiles()
 
@@ -27,9 +34,7 @@ export const create = () => {
         return
       }
 
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-      })
+      res.writeHead(200, headers)
       res.end(JSON.stringify(file.content))
     })
     .listen((PORT: any), () => console.log(`http://localhost:${PORT}`))

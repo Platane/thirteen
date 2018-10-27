@@ -5,11 +5,29 @@ import type { Action } from '~/store/action/type'
 export type State = {
   pending: string[],
   preload: any[],
+  index: { [string]: string[] } | null,
 }
 
 export const defaultState: State = {
   preload: [],
   pending: [],
+  index: null,
+}
+
+const reduceIndex = (state: State, action: Action): State => {
+  if (
+    action.type === 'resource:fetcher:success' &&
+    action.resourceName === 'editions'
+  ) {
+    const index = {}
+    action.res.editions.forEach(
+      ({ slug, entriesChunk }) => (index[slug] = entriesChunk)
+    )
+
+    return { ...state, index }
+  }
+
+  return state || defaultState
 }
 
 const reducePending = (state: State, action: Action): State => {
@@ -46,4 +64,4 @@ const reducePreload = (state: State, action: Action): State => {
   return state || defaultState
 }
 
-export const reduce = chainReducer(reducePending, reducePreload)
+export const reduce = chainReducer(reduceIndex, reducePending, reducePreload)

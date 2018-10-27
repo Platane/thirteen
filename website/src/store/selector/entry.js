@@ -9,24 +9,10 @@ export const selectCurrentEntrySlug = (state: State) =>
     : null
 
 export const selectCurrentEditionSlug = (state: State) =>
-  state.router.param.editionSlug
+  state.router.param.editionSlug || state.router.param.entrySlug1
 
 export const selectCurrentCategory = (state: State) =>
   state.router.param.category
-
-export const selectCurrentCardEntry = createSelector(
-  selectResourceState,
-  selectCurrentEntrySlug,
-
-  ({ entryBySlug }, entrySlug) => entryBySlug[entrySlug]
-)
-
-export const selectCurrentEntry = createSelector(
-  selectResourceState,
-  selectCurrentEntrySlug,
-
-  ({ entryBySlug }, entrySlug) => entryBySlug[entrySlug]
-)
 
 export const selectEditions = createSelector(
   selectResourceState,
@@ -55,4 +41,11 @@ export const selectCurrentEntries = createSelector(
       .map(slug => entryBySlug[slug])
       .filter(({ categories }) => !category || categories.includes(category))
   }
+)
+
+export const selectCurrentEntry = createSelector(
+  selectResourceState,
+  selectCurrentEntrySlug,
+
+  ({ entryBySlug }, entrySlug) => entryBySlug[entrySlug]
 )

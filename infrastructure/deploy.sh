@@ -36,6 +36,8 @@ export S3_URL=`aws cloudformation describe-stacks --stack-name $STACKNAME \
 
 export APP_ORIGIN=$S3_URL
 
+export STATIC_ENDPOINT="$S3_URL/data"
+
 rm -rf website/.build/
 
 (cd website ; yarn build )
@@ -49,7 +51,7 @@ cp -r api-static/.build website/.build/data
 
 cd website/.build/
 
-aws s3 cp --no-progress --quiet --recursive \
+aws s3 cp --no-progress --recursive \
   --acl "public-read" \
   --cache-control 'max-age=31104000' \
   --exclude "*.html" \
@@ -71,7 +73,7 @@ for file in `find -name "*.html" -or -name "*.json" -or -name "*.css" -or -name 
   gzip -9 -c $file > $target
 done
 
-aws s3 cp --no-progress --quiet --recursive \
+aws s3 cp --no-progress --recursive \
   --acl "public-read" \
   --content-encoding "gzip" \
   --cache-control 'max-age=3600' \
@@ -80,7 +82,7 @@ aws s3 cp --no-progress --quiet --recursive \
   --content-type "text/html" \
   ./gzip/ s3://$BUCKET_NAME
 
-aws s3 cp --no-progress --quiet --recursive \
+aws s3 cp --no-progress --recursive \
   --acl "public-read" \
   --content-encoding "gzip" \
   --cache-control 'max-age=31104000' \
@@ -89,7 +91,7 @@ aws s3 cp --no-progress --quiet --recursive \
   --content-type "text/css" \
   ./gzip/ s3://$BUCKET_NAME
 
-aws s3 cp --no-progress --quiet --recursive \
+aws s3 cp --no-progress --recursive \
   --acl "public-read" \
   --content-encoding "gzip" \
   --cache-control 'max-age=31104000' \
@@ -99,7 +101,7 @@ aws s3 cp --no-progress --quiet --recursive \
   --content-type "application/json" \
   ./gzip/ s3://$BUCKET_NAME
 
-aws s3 cp --no-progress --quiet --recursive \
+aws s3 cp --no-progress --recursive \
   --acl "public-read" \
   --content-encoding "gzip" \
   --cache-control 'max-age=3600' \
@@ -108,7 +110,7 @@ aws s3 cp --no-progress --quiet --recursive \
   --content-type "application/json" \
   ./gzip/ s3://$BUCKET_NAME
 
-aws s3 cp --no-progress --quiet --recursive \
+aws s3 cp --no-progress --recursive \
   --acl "public-read" \
   --content-encoding "gzip" \
   --cache-control 'max-age=31104000' \

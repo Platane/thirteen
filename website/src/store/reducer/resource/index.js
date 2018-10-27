@@ -1,5 +1,5 @@
 import { chainReducer } from '~/util/chainReducer'
-import { getFetcher } from '~/sideEffect/resourceFetcher/fetchers'
+import { getFetcher } from '~/sideEffect/staticResourceFetcher/fetchers'
 import type { Entry, ID } from '~/type'
 import type { Action } from '~/store/action/type'
 

@@ -1,6 +1,6 @@
 import path from 'path'
 
-export const PORT = process.env.PORT || 3000
+export const PORT = process.env.PORT || 3002
 
 export const SUBMISSION_DIR_PATH = path.resolve(
   __dirname,

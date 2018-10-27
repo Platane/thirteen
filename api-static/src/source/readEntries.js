@@ -31,6 +31,10 @@ export const readEntries = () =>
 
         return {
           ...manifest,
+          image: {
+            small: manifest.image['100x100'],
+            big: manifest.image['400x250'],
+          },
           slug,
           sha,
         }
