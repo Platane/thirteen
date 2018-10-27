@@ -37,7 +37,7 @@ module.exports = {
         test: [/\.bmp/, /\.gif/, /\.jpe?g/, /\.png/, /\.otf/, /\.svg/, /\.css/],
         loader: 'file-loader',
         options: {
-          name: '[name]-[hash:8].[ext]',
+          name: production ? '[name]-[hash:8].[ext]' : '[name].[ext]',
         },
       },
     ],
