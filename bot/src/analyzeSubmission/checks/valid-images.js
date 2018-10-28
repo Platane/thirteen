@@ -2,18 +2,17 @@ import path from 'path'
 import getPixel from 'get-pixels'
 import { promisify } from 'util'
 import { readMainDirectory } from '../../readSubmission/readMainDirectory'
-import { IMAGES } from '../../config'
 
 export const key = 'valid-images'
 export const title = 'Valid Images'
 export const description = 'Should contains valid images'
-export const check = async ({ files, manifest }) => {
+export const check = async ({ files, config, manifest }) => {
   const mainDir = readMainDirectory(files)
 
   if (!manifest) return false
 
   const n = await Promise.all(
-    Object.keys(IMAGES).map(async key => {
+    Object.keys(config.images).map(async key => {
       const imageFilename =
         manifest.images &&
         manifest.images[key] &&
@@ -31,17 +30,17 @@ export const check = async ({ files, manifest }) => {
         shape: [width, height],
       } = await promisify(getPixel)(Buffer.from(b.content, 'base64'), type)
 
-      if (IMAGES[key].width !== width || IMAGES[key].height !== height)
+      const spec = config.images[key]
+
+      if (spec.width !== width || spec.height !== height)
         return [
           `Image "${key}" does not meet the required resolution.`,
-          `Should be ${IMAGES[key].width}x${IMAGES[key].height},`,
+          `Should be ${spec.width}x${spec.height},`,
           `but is ${width}x${height}`,
         ].join(' ')
 
-      if (b.size > IMAGES[key].sizeLimit)
-        return `Image "${key}" is over the ${
-          IMAGES[key].sizeLimit
-        }o size limit.`
+      if (b.size > spec.sizeLimit)
+        return `Image "${key}" is over the ${spec.sizeLimit}o size limit.`
     })
   )
 
