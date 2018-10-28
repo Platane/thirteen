@@ -9,6 +9,7 @@
   "dependencies": {
     "aws-sdk": "2.334.0",
     "flow-aws-lambda": "1.0.3",
+    "get-pixels": "3.3.2",
     "github-app": "4.0.1",
     "joi": "13.7.0",
     "node-zip": "1.1.1"

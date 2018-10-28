@@ -23,6 +23,17 @@ const schema = Joi.object().keys({
       .valid('All', 'Desktop', 'Mobile', 'Server', 'WebXR')
   ),
 
+  images: Joi.object()
+    .keys({
+      big: Joi.string()
+        .uri({ allowRelative: true, relativeOnly: true })
+        .required(),
+      small: Joi.string()
+        .uri({ allowRelative: true, relativeOnly: true })
+        .required(),
+    })
+    .required(),
+
   authors: Joi.array()
     .items(
       Joi.object()

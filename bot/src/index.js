@@ -1,29 +1,18 @@
 import createApp from 'github-app'
-import { sortDependencyGraph } from './service/graph/topologicalSorting'
+import { readSubmission } from './readSubmission'
+import { analyzeSubmission, checkNames } from './analyzeSubmission'
 import { GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY } from './config/github'
 import { LABEL_NAME } from './config'
 
 import type { APIGatewayEvent, ProxyResult } from 'flow-aws-lambda'
 import type { Event, File } from './type'
 
-const originalSteps = [
-  require('./step/manifest-bundle'),
-  require('./step/manifest-read'),
-  require('./step/read-dir'),
-  require('./step/deploy'),
-]
-
 export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
   const event: Event = JSON.parse(e.body)
 
-  console.log(event.pull_request.labels)
+  console.log(event)
 
-  /**
-   * ignore some cases
-   */
-  if (event.pull_request.state !== 'open') return
-
-  if (!event.pull_request.labels.some(({ name }) => name === LABEL_NAME)) return
+  if (['rerequested', 'requested'].includes(event.action)) return
 
   /**
    * create github api client
@@ -34,134 +23,73 @@ export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
   }).asInstallation(event.installation.id)
 
   /**
-   * exec all the steps
+   * ignore some cases
    */
-  await execSteps(github)(event)
+  if (event.pull_request.state !== 'open') return
+
+  if (!event.pull_request.labels.some(({ name }) => name === LABEL_NAME)) return
+
+  /**
+   * prepare the report
+   */
+  const reportRuns = await createReportRuns(github, event.pull_request)
+
+  /**
+   * read the submission
+   */
+  const s = await readSubmission(github)(event.pull_request)
+
+  /**
+   * analyze the submission
+   */
+  const checks = await analyzeSubmission({ ...event, ...s, github })
+
+  /**
+   * fire the report
+   */
+  await reportRuns(checks)
+
+  console.log(checks)
 }
 
-const extractRunNames = steps => [
-  ...new Set(steps.map(s => s.runName).filter(Boolean)),
-]
-
-const formatOutput = runName => ({ results }) => ({
-  title: '',
-  summary: results
-    .map(({ success, label, details }) => {
-      return [
-        '-',
-        success ? '✓' : '×',
-        label,
-
-        details ? ('\n' + details).replace(/\n/g, '\n  >') : '',
-      ].join(' ')
-    })
-    .join('\n'),
-})
-
-const execSteps = github => async event => {
-  const steps = sortDependencyGraph(
-    originalSteps.map(x => ({ ...x, id: x.stepName }))
-  )
+const createReportRuns = async (github, pr) => {
+  const runIds = {}
 
   /**
-   * parse event
+   * create the check, as queued
    */
-  const owner = event.repository.owner.login
-  const repo = event.repository.name
-  const pull_request_number = event.number
-  const commit_sha = event.pull_request.head.sha
-
-  /**
-   * create the runs
-   */
-  const runResult = {}
-  const runId = {}
   await Promise.all(
-    extractRunNames(steps).map(async runName => {
-      const { data } = await github.checks.create({
-        owner,
-        repo,
-        name: runName,
-        head_sha: commit_sha,
-        status: 'queued',
-      })
-
-      runResult[runName] = { results: [] }
-      runId[runName] = data.id
-    })
+    checkNames.map(({ key, title }) =>
+      github.checks
+        .create({
+          owner: pr.base.repo.owner.login,
+          repo: pr.base.repo.name,
+          name: title,
+          head_sha: pr.head.sha,
+          status: 'queued',
+        })
+        .then(({ data: { id } }) => (runIds[key] = id))
+    )
   )
 
   /**
-   * prepare context
+   * update the checks
    */
-  let ctx = {
-    github,
-    owner,
-    repo,
-    commit_sha,
-    pull_request_number,
-    event,
-    runResult,
-  }
-
-  /**
-   * exec loop
-   */
-  while (steps.length) {
-    const { exec, runName } = steps.shift()
-
-    /**
-     * update check run to pending
-     */
-    github.checks.update({
-      owner,
-      repo,
-      check_run_id: runId[runName],
-      status: 'in_progress',
-    })
-
-    ctx = await exec(ctx)
-
-    const lastStepFromTheRun = !steps.some(s => s.runName === runName)
-    const failure = ctx.runResult[runName].results.some(
-      ({ success }) => !success
-    )
-
-    /**
-     * if the step fails,
-     * stop running the other steps
-     * close all remaining runs
-     */
-    if (failure) {
-      await Promise.all(
-        extractRunNames([...steps, { runName }]).map(runName =>
-          github.checks.update({
-            owner,
-            repo,
-            check_run_id: runId[runName],
-            completed_at: new Date().toISOString(),
-            status: 'completed',
-            conclusion: 'failure',
-            output: formatOutput(runName)(runResult[runName]),
-          })
-        )
+  return checks =>
+    Promise.all(
+      checks.map(({ key, title, description, result: conclusion, detail }) =>
+        github.checks.update({
+          owner: pr.base.repo.owner.login,
+          repo: pr.base.repo.name,
+          check_run_id: runIds[key],
+          completed_at: new Date().toISOString(),
+          status: 'completed',
+          conclusion,
+          output: {
+            title,
+            summary: `__${description || ''}__\n\n${detail || ''}`,
+          },
+        })
       )
-
-      break
-    }
-
-    /**
-     * update check
-     */
-    if (lastStepFromTheRun)
-      await github.checks.update({
-        owner,
-        repo,
-        check_run_id: runId[runName],
-        completed_at: new Date().toISOString(),
-        status: 'completed',
-        conclusion: 'success',
-        output: formatOutput(runName)(runResult[runName]),
-      })
-  }
+    )
 }
