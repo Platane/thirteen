@@ -1,4 +1,5 @@
 import createApp from 'github-app'
+import { deploy } from './deploy'
 import { readConfig } from './readConfig'
 import { readSubmission } from './readSubmission'
 import { createReportRuns } from './createReportRuns'
@@ -57,12 +58,19 @@ export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
   /**
    * analyze the submission
    */
-  const checks = await analyzeSubmission({ ...event, ...s, github, config })
+  const ctx = { ...event, ...s, github, config }
+  const checks = await analyzeSubmission(ctx)
 
   /**
    * fire the report
    */
   await reportRuns(checks)
 
-  console.log(checks)
+  /**
+   * deploy
+   */
+  let deployRes =
+    ctx.files && ctx.manifest && ctx.bundleFiles && (await deploy(ctx))
+
+  console.log(deployRes, checks)
 }
