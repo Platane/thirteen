@@ -14,5 +14,20 @@ export const check = ({ files, manifest }) => {
     bundleFilename &&
     files.find(({ filename }) => path.normalize(filename) === bundleFilename)
 
-  return b && b.size <= 13 * 1024
+  if (!b)
+    return {
+      result: 'failure',
+      detail: 'Bundle not found',
+    }
+
+  if (b.size > 13 * 1024)
+    return {
+      result: 'failure',
+      detail: [
+        `bundle is found to have a size of ${b.size}o,`,
+        `which is more than the ${13 * 1024}o allowed`,
+      ].join(' '),
+    }
+
+  return true
 }
