@@ -1,5 +1,5 @@
-import { renderPageState } from './website/build/static-renderer/renderPage/renderPageState'
-import { defaultState } from './website/build/store/reducer'
+import { renderPageState } from './website/lib/static-renderer/renderPage/renderPageState'
+import { defaultState } from './website/lib/store/reducer'
 // import { renderState } from '@thirteen/website/src/static-renderer/renderPage/renderPageState'
 
 export const render = (slug, manifest) => {
