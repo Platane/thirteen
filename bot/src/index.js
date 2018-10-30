@@ -1,5 +1,6 @@
 import createApp from 'github-app'
 import { deploy } from './deploy'
+import { setComment } from './comment'
 import { readConfig } from './readConfig'
 import { readSubmission } from './readSubmission'
 import { createReportRuns } from './createReportRuns'
@@ -11,6 +12,8 @@ import type { Event, File } from './type'
 
 export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
   const event: Event = JSON.parse(e.body)
+
+  console.log(event)
 
   /**
    * create github api client
@@ -24,6 +27,8 @@ export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
    * read the config
    */
   const config = await readConfig(github, event.repository)
+
+  console.log(config)
 
   /**
    * ignore some cases
@@ -71,6 +76,11 @@ export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
    */
   let deployRes =
     ctx.files && ctx.manifest && ctx.bundleFiles && (await deploy(ctx))
+
+  /**
+   * add a comment
+   */
+  await setComment(github, config, event.pull_request, checks, deployRes)
 
   console.log(deployRes, checks)
 }

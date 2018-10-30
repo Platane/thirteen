@@ -23,4 +23,12 @@ export const schema = Joi.object().keys({
         .default(1000000000),
     })
   ),
+
+  reviewers: Joi.array()
+    .items(
+      Joi.string()
+        .trim()
+        .replace(/^@/, '')
+    )
+    .default([]),
 })
