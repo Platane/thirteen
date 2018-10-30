@@ -11,7 +11,7 @@ export const Entry = ({ entry }) => (
       {entry && <AuthorsBlock authors={entry.authors} />}
 
       <Link
-        href={entry && `/entry/${entry.slug}`}
+        href={entry && `/entry/${entry.slug}/game`}
         target="_blank"
         className="launch"
       >

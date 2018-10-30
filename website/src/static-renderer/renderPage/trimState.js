@@ -13,7 +13,7 @@ export const trimState = (state: State) => {
     const { resource } = state
 
     const editionBySlug = {}
-    resource.editions.forEach(
+    ;(resource.editions || []).forEach(
       slug => (editionBySlug[slug] = { categories: [], entries: null })
     )
 
