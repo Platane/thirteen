@@ -15,29 +15,33 @@ const headers = {
   'access-control-allow-origin': '*',
 }
 
-export const create = () => {
-  const files = getFiles()
+export const create = () =>
+  new Promise(resolve => {
+    const files = getFiles()
 
-  const server = http
-    .createServer((req, res) => {
-      const url = parseUrl(req.url)
+    const server = http
+      .createServer((req, res) => {
+        const url = parseUrl(req.url)
 
-      const filename = url.pathname.split('/').slice(-1)[0]
+        const filename = url.pathname.split('/').slice(-1)[0]
 
-      console.log(filename)
+        console.log(filename)
 
-      const file = files.find(x => x.filename === filename)
+        const file = files.find(x => x.filename === filename)
 
-      if (!file) {
-        res.writeHead(404)
-        res.end()
-        return
-      }
+        if (!file) {
+          res.writeHead(404)
+          res.end()
+          return
+        }
 
-      res.writeHead(200, headers)
-      res.end(JSON.stringify(file.content))
-    })
-    .listen((PORT: any), () => console.log(`http://localhost:${PORT}`))
+        res.writeHead(200, headers)
+        res.end(JSON.stringify(file.content))
+      })
+      .listen((PORT: number), () => {
+        const url = `http://localhost:${PORT}`
+        resolve({ url, close })
+      })
 
-  return () => server.close()
-}
+    const close = () => server.close()
+  })
