@@ -10,15 +10,16 @@
     "start": "webpack-dev-server --mode development --config ./script/webpack.config.js",
     "prepare": "ls .build/manifest.json || ( mkdir -p .build ; echo '{}' > .build/manifest.json );ls .build/stats.json || ( mkdir -p .build ; echo '{\"namedChunkGroups\":{}}' > .build/stats.json )",
     "build": "NODE_ENV=production webpack --mode production --config ./script/webpack.config.js",
+    "build:node": "rm -rf lib ; BABEL_ENV=node babel src --config-file ./.babelrc.js --out-dir lib",
     "build:all:page": "yarn prepare && BABEL_ENV=node yarn babel-node -e 'require(\"./src/static-renderer\")'"
   },
   "dependencies": {
     "declarative-router": "0.1.4",
     "emotion": "9.2.12",
     "node-fetch": "2.2.0",
-    "react": "16.5.2",
-    "react-dom": "16.5.2",
-    "react-redux": "5.0.7",
+    "react": "16.6.0",
+    "react-dom": "16.6.0",
+    "react-redux": "5.1.0",
     "redux": "4.0.1"
   },
   "devDependencies": {
@@ -38,20 +39,20 @@
     "babel-plugin-module-resolver": "3.1.1",
     "babel-plugin-transform-inline-environment-variables": "0.4.3",
     "browser-tap": "0.0.1",
-    "css-loader": "1.0.0",
+    "css-loader": "1.0.1",
     "emotion-server": "9.2.12",
     "file-loader": "2.0.0",
-    "flow-bin": "0.83.0",
+    "flow-bin": "0.85.0",
     "html-webpack-plugin": "3.2.0",
     "prettier": "1.14.3",
     "serialize-javascript": "1.5.0",
     "style-loader": "0.23.1",
     "tap-spec": "5.0.0",
     "tape": "4.9.1",
-    "webpack": "4.20.2",
-    "webpack-bundle-analyzer": "3.0.2",
+    "webpack": "4.24.0",
+    "webpack-bundle-analyzer": "3.0.3",
     "webpack-cli": "3.1.2",
-    "webpack-dev-server": "3.1.9",
+    "webpack-dev-server": "3.1.10",
     "webpack-manifest-plugin": "2.0.4"
   }
 }
