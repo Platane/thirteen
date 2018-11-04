@@ -17,11 +17,13 @@ const schema = Joi.object().keys({
     scheme: [/https?/],
   }),
 
-  categories: Joi.array().items(
-    Joi.string()
-      .lowercase()
-      .valid('All', 'Desktop', 'Mobile', 'Server', 'WebXR')
-  ),
+  categories: Joi.array()
+    .items(
+      Joi.string()
+        .lowercase()
+        .valid('All', 'Desktop', 'Mobile', 'Server', 'WebXR')
+    )
+    .required(),
 
   images: Joi.object()
     .keys({
@@ -70,4 +72,4 @@ const schema = Joi.object().keys({
 })
 
 export const validateManifestSchema = (o, context) =>
-  schema.validate(o, { context })
+  schema.validate(o, { context, abortEarly: false })

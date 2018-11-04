@@ -25,6 +25,7 @@ export const buildFiles = editions => {
 
       return {
         slug: edition.slug,
+        categories: edition.categories,
         entriesChunk,
       }
     }),

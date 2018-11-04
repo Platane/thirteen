@@ -11,7 +11,6 @@ export const pushInCache = (state, _, data) => {
       (editionBySlug[edition.slug] = {
         ...(editionBySlug[edition.slug] || {}),
         ...edition,
-        categories: [],
         entries: (editionBySlug[edition.slug] || { entries: null }).entries,
       })
   )

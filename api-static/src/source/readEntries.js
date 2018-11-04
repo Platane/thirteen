@@ -3,10 +3,15 @@ import path from 'path'
 import { computeSha } from './computeSha'
 import { SUBMISSION_DIR_PATH } from '../config'
 
+const flat = arr => [].concat(...arr)
+const removeDuplicated = arr => Array.from(new Set(arr))
+
 export const readEntries = () =>
-  fs.readdirSync(SUBMISSION_DIR_PATH).map(editionSlug => ({
-    slug: editionSlug,
-    entries: fs
+  fs.readdirSync(SUBMISSION_DIR_PATH).map(editionSlug => {
+    /**
+     * read the entries for this edition
+     */
+    const entries = fs
       .readdirSync(path.resolve(SUBMISSION_DIR_PATH, editionSlug))
       .map(b => {
         const slug = editionSlug + '/' + b
@@ -38,5 +43,15 @@ export const readEntries = () =>
           slug,
           sha,
         }
-      }),
-  }))
+      })
+
+    const categories = removeDuplicated(
+      flat(entries.map(({ categories }) => categories))
+    )
+
+    return {
+      slug: editionSlug,
+      categories,
+      entries,
+    }
+  })

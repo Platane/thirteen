@@ -3,7 +3,7 @@ import util from 'util'
 import path from 'path'
 import mkdirp from 'mkdirp'
 import { renderPage } from '../renderPage'
-import { parallel } from './parallel'
+import { parallel } from '~/util/parallel'
 import { getEntries } from './getEntries'
 
 export const BUILD_DIR = path.join(__dirname, '../../../.build')
