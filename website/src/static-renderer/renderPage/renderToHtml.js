@@ -31,7 +31,7 @@ const Html = ({
       {title && <title>{title}</title>}
       {metaProperties.map(({ name, property, content }) => (
         <meta
-          key={name | property}
+          key={name || property}
           name={name}
           property={property}
           content={content}

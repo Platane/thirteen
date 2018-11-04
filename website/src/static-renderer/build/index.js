@@ -4,7 +4,8 @@ import path from 'path'
 import mkdirp from 'mkdirp'
 import { renderPage } from '../renderPage'
 import { parallel } from '~/util/parallel'
-import { getEntries } from './getEntries'
+import { readEntries } from './readEntries'
+import { copyGameAssets } from './copyGameAssets'
 
 export const BUILD_DIR = path.join(__dirname, '../../../.build')
 
@@ -19,21 +20,31 @@ export const writePage = async url => {
 }
 
 const flat = arr => [].concat(...arr)
+const removeDuplicated = arr => Array.from(new Set(arr))
 
 export const writeAllPages = async () => {
-  const res = await getEntries()
+  const entries = await readEntries()
 
   const urls = [
-    ...flat(
-      res.editions.items.map(({ entries }) =>
-        entries.items.map(({ slug }) => `entry/${slug}`)
-      )
+    /**
+     * entry pages
+     */
+    ...entries.map(({ slug }) => `entry/${slug}`),
+
+    /**
+     * entries for edition pages
+     */
+    ...removeDuplicated(entries.map(({ slug }) => slug.split('/')[0])).map(
+      slug => `entries/${slug}`
     ),
 
-    ...res.editions.items.map(({ slug }) => `entries/${slug}`),
-
+    /**
+     * home page
+     */
     '',
   ]
 
   await parallel(50, urls.map(url => () => console.log(url) || writePage(url)))
+
+  await parallel(10, entries.map(e => () => copyGameAssets(BUILD_DIR, e)))
 }

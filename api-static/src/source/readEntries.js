@@ -36,6 +36,12 @@ export const readEntries = () =>
 
         return {
           ...manifest,
+          bundle_path: path.resolve(
+            SUBMISSION_DIR_PATH,
+            slug,
+            bundle_path || 'bundle.zip'
+          ),
+          bundle_index: bundle_index || 'index.html',
           image: {
             small: manifest.image['100x100'],
             big: manifest.image['400x250'],

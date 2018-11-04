@@ -4,7 +4,7 @@ set -e
 
 export STACKNAME="thirteen-bot"
 
-(cd bot ; yarn build )
+(cd bot ; yarn prepare ; yarn build )
 
 (cd api-graphql ; yarn build )
 
@@ -34,7 +34,10 @@ export BUCKET_NAME=`aws cloudformation describe-stacks --stack-name $STACKNAME \
 export S3_URL=`aws cloudformation describe-stacks --stack-name $STACKNAME \
   --query 'Stacks[0].Outputs[?OutputKey==\`s3Url\`].OutputValue' --output text`
 
-export APP_ORIGIN=$S3_URL
+export WEBSITE_URL=`aws cloudformation describe-stacks --stack-name $STACKNAME \
+  --query 'Stacks[0].Outputs[?OutputKey==\`websiteUrl\`].OutputValue' --output text`
+
+export APP_ORIGIN=$WEBSITE_URL
 
 export STATIC_ENDPOINT="$S3_URL/data"
 
@@ -64,7 +67,7 @@ rm -rf gzip
 mkdir gzip
 
 
-for file in `find -name "*.html" -or -name "*.json" -or -name "*.css" -or -name "*.js" -type f`; do
+for file in `find -name "*.html" -type f -or -name "*.json" -type f -or -name "*.css" -type f -or -name "*.js" -type f`; do
 
   target=$(readlink -m gzip/$file )
 
@@ -120,4 +123,4 @@ aws s3 cp --no-progress --recursive \
   ./gzip/ s3://$BUCKET_NAME
 
 
-echo $APP_ORIGIN
+echo $WEBSITE_URL
