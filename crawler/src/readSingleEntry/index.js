@@ -8,10 +8,6 @@ export const readSingleEntry = async slug => {
 
   return {
     game_url: gameUrl,
-    image: {
-      '100x100': gameUrl + '/__small.jpg',
-      '400x250': gameUrl + '/__big.jpg',
-    },
     ...parseEntry(await readHtmlPage(entryUrl)),
   }
 }

@@ -4,7 +4,7 @@ import { AuthorsBlock } from './AuthorsBlock'
 
 export const Entry = ({ entry }) => (
   <article className="single-entry">
-    <img src={entry && entry.image.big} alt={entry && entry.title} />
+    <img src={entry && entry.images.big} alt={entry && entry.title} />
     <div className="info">
       <h2>{entry && entry.title}</h2>
 

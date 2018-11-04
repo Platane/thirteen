@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --mode development --config ./script/webpack.config.js",
-    "prepare": "ls .build/manifest.json || ( mkdir -p .build ; echo '{}' > .build/manifest.json );ls .build/stats.json || ( mkdir -p .build ; echo '{\"namedChunkGroups\":{}}' > .build/stats.json )",
+    "prepare": "ls .build/manifest.json || ( mkdir -p .build ; echo '{}' > .build/manifest.json );ls .build/stats.json || ( mkdir -p .build ; echo '{\"namedChunkGroups\":{}}' > .build/stats.json ) ; BABEL_ENV=node babel ../api-static/src --config-file ./.babelrc.js --out-dir lib-source",
     "build": "NODE_ENV=production webpack --mode production --config ./script/webpack.config.js",
     "build:node": "rm -rf lib ; BABEL_ENV=node babel src --config-file ./.babelrc.js --out-dir lib",
     "build:all:page": "yarn prepare && BABEL_ENV=node yarn babel-node -e 'require(\"./src/static-renderer\")'"

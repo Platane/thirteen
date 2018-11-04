@@ -1,9 +1,30 @@
+import path from 'path'
 import { computeSha } from './computeSha'
 
 const split = (arr, n) =>
   Array.from({ length: Math.ceil(arr.length / n) }).map((_, i) =>
     arr.slice(i * n, (i + 1) * n)
   )
+
+const trimManifest = ({
+  sha,
+  bundle_path,
+  bundle_index,
+  slug,
+  images,
+  ...manifest
+}) => ({
+  slug,
+  ...manifest,
+  game_url: `entry/${slug}/game`,
+  images: Object.keys(images).reduce(
+    (o, key) => ({
+      ...o,
+      [key]: `/entry/${slug}/images/${key}${path.extname(images[key])}`,
+    }),
+    {}
+  ),
+})
 
 export const buildFiles = editions => {
   const files = []
@@ -17,7 +38,7 @@ export const buildFiles = editions => {
 
         files.push({
           filename,
-          content: entries,
+          content: entries.map(trimManifest),
         })
 
         return filename

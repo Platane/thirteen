@@ -11,7 +11,7 @@ export const selectMetaImage = createSelector(
   selectCurrentEntry,
 
   entry => {
-    if (entry && entry.image.large) return entry.image.large
+    if (entry && entry.images.large) return entry.images.large
     return 'https://github.com/platane.png'
   }
 )

@@ -4,7 +4,7 @@ import { Link } from '~/component/Link'
 const Entry = ({ entry, onMouseOver }) => (
   <article className="entry" onMouseOver={onMouseOver}>
     <Link href={`/entry/${entry.slug}`}>
-      <img src={entry.image.small} alt={entry.title} />
+      <img src={entry.images.small} alt={entry.title} />
       <h3>{entry.title}</h3>
       <span>{entry.authors[0] && entry.authors[0].name}</span>
     </Link>

@@ -1,6 +1,7 @@
 import { readEntryList } from './readEntryList'
 import { readSingleEntry } from './readSingleEntry'
 import { readSingleEntryBundle } from './readSingleEntryBundle'
+import { readSingleEntryImages } from './readSingleEntryImages'
 import { writeSubmission } from './writeSubmission'
 import { parallel } from './util/parallel'
 
@@ -14,11 +15,12 @@ const crawl = async editions => {
 
     const { game_url, ...manifest } = await readSingleEntry(slug)
     const bundleContent = await readSingleEntryBundle(game_url)
+    const imagesContent = await readSingleEntryImages(game_url)
 
-    await writeSubmission(slug, manifest, bundleContent)
+    await writeSubmission(slug, manifest, bundleContent, imagesContent)
   })
 
-  await parallel(3, tasks)
+  await parallel(2, tasks)
 }
 
 const years = Array.from({ length: 7 }).map((_, i) => (2012 + i).toString())

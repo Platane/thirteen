@@ -22,7 +22,7 @@ export const readEntries = () =>
           )
           .toString()
 
-        const { bundle_path, bundle_index, ...manifest } = JSON.parse(
+        const { bundle_path, bundle_index, images, ...manifest } = JSON.parse(
           manifestRaw
         )
 
@@ -42,10 +42,13 @@ export const readEntries = () =>
             bundle_path || 'bundle.zip'
           ),
           bundle_index: bundle_index || 'index.html',
-          image: {
-            small: manifest.image['100x100'],
-            big: manifest.image['400x250'],
-          },
+          images: Object.keys(images).reduce(
+            (o, key) => ({
+              ...o,
+              [key]: path.resolve(SUBMISSION_DIR_PATH, slug, images[key]),
+            }),
+            {}
+          ),
           slug,
           sha,
         }
