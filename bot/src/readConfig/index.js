@@ -2,6 +2,10 @@ import YAML from 'yaml'
 import { schema } from './schema'
 import { decodeBase64 } from '../util/base64'
 
+/**
+ * search the repository for a file named ".thirteen-bot.yml" at the root
+ * read it, parse it, validate it
+ */
 export const readConfig = async (github, repo) => {
   const q = [
     `repo:${repo.full_name}`,
@@ -25,5 +29,5 @@ export const readConfig = async (github, repo) => {
 
   const raw = YAML.parse(decodeBase64(content))
 
-  return schema.validate(raw || {})
+  return schema.validate(raw || {}, { allowUnknown: true })
 }

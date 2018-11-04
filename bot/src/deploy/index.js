@@ -11,6 +11,9 @@ export const deploy = async ctx => {
     ({ filename }) => ctx.manifest.bundle_index || 'index.html'
   )
 
+  /**
+   * upload images
+   */
   const imageUrls = {}
   await Promise.all(
     Object.keys(ctx.imageFiles || {}).map(key =>
@@ -24,6 +27,9 @@ export const deploy = async ctx => {
     )
   )
 
+  /**
+   * upload game and game assets
+   */
   const [gameUrl] = await Promise.all([
     upload(`entry/${slug}/game/index.html`, Buffer.from(indexFile.content), {
       ContentType: 'text/html',
@@ -36,6 +42,10 @@ export const deploy = async ctx => {
       ),
   ])
 
+  /**
+   * upload renderer entry page
+   * note that when visiting this page, it will try to required js script from the root url
+   */
   const entryUrl = await upload(
     `entry/${slug}/index.html`,
     render(slug, { ...ctx.manifest, image: imageUrls, gameUrl }),
@@ -44,7 +54,12 @@ export const deploy = async ctx => {
 
   return {
     imageUrls,
-    entryUrl,
+
+    /**
+     * use the website url instead of the static one
+     * because it handles redirections
+     */
+    entryUrl: entryUrl.replace('.s3.', '.s3-website-').replace('https', 'http'),
     gameUrl,
   }
 }

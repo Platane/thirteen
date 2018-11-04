@@ -5,7 +5,7 @@ import { readImageFiles } from './readImageFiles'
 import { readBundleFiles } from './readBundleFiles'
 import type { PullRequest } from '../../type'
 
-export const readSubmission = github => async (pr: PullRequest) => {
+export const readSubmission = github => async (config: *, pr: PullRequest) => {
   const files = await getFiles(github)(pr)
 
   const manifest = files && (await readManifest(files))

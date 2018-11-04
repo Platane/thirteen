@@ -31,4 +31,8 @@ export const schema = Joi.object().keys({
         .replace(/^@/, '')
     )
     .default([]),
+
+  categories: Joi.array()
+    .items(Joi.string().trim())
+    .default(['desktop']),
 })
