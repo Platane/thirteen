@@ -13,6 +13,7 @@ export const Entry = ({ entry }) => (
       <Link
         href={entry && `/entry/${entry.slug}/game`}
         target="_blank"
+        external
         className="launch"
       >
         Play the game
