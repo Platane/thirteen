@@ -5,6 +5,7 @@ const checks = [
   require('./checks/file-structure'),
   require('./checks/bundle-size'),
   require('./checks/valid-images'),
+  require('./checks/game-run'),
 ]
 
 type Check = {

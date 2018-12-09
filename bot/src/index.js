@@ -37,10 +37,17 @@ const analyze = async (github, config, pull_request) => {
    */
   const s = await readSubmission(github)(config, pull_request)
 
+  const ctx = { github, config, pull_request, ...s }
+
+  /**
+   * deploy
+   */
+  ctx.deploy =
+    ctx.files && ctx.manifest && ctx.bundleFiles && (await deploy(ctx))
+
   /**
    * analyze the submission
    */
-  const ctx = { github, config, pull_request, ...s }
   const checks = await analyzeSubmission(ctx)
 
   /**
@@ -49,21 +56,11 @@ const analyze = async (github, config, pull_request) => {
   await reportRuns(checks)
 
   /**
-   * deploy
-   */
-  let deployRes =
-    ctx.files && ctx.manifest && ctx.bundleFiles && (await deploy(ctx))
-
-  /**
    * add a comment
    */
-  await setComment(github, config, pull_request, checks, deployRes)
+  await setComment(github, config, pull_request, ctx, checks)
 
-  console.log(
-    'analyze result ',
-    JSON.stringify(deployRes),
-    JSON.stringify(checks)
-  )
+  return { ctx, checks }
 }
 
 const readHeader = (headers, name) =>
@@ -110,13 +107,18 @@ export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
           number,
         })
 
-        await analyze(github, config, pull_request)
+        const res = await analyze(github, config, pull_request)
+
+        console.log(JSON.stringify(res.checks))
       }
       break
 
     case 'pull_request':
-      if (['labeled', 'opened', 'edited'].includes(githubEventBody.action))
-        await analyze(github, config, githubEventBody.pull_request)
+      if (['labeled', 'opened', 'edited'].includes(githubEventBody.action)) {
+        const res = await analyze(github, config, githubEventBody.pull_request)
+
+        console.log(JSON.stringify(res.checks))
+      }
       break
   }
 }

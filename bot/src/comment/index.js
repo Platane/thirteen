@@ -26,10 +26,10 @@ const createOrEditComment = async (github, pr, body) => {
     })
 }
 
-export const setComment = (github, config, pr, checks, deployRes) =>
-  createOrEditComment(github, pr, buildBody(config, pr, checks, deployRes))
+export const setComment = (github, config, pr, ctx, checks) =>
+  createOrEditComment(github, pr, buildBody(config, pr, ctx, checks))
 
-const buildBody = (config, pr, checks, deployRes) => {
+const buildBody = (config, pr, ctx, checks) => {
   const body = [
     `__Hi ${pr.user.login} :wave:__`,
     'Thanks for your participation !',
@@ -42,7 +42,7 @@ const buildBody = (config, pr, checks, deployRes) => {
   const passImageCheck = checks.some(
     ({ key, result }) => key === 'valid-images' && result !== 'failure'
   )
-  const passDeploy = !!deployRes
+  const passDeploy = !!ctx.deploy
 
   if (passCheck)
     body.push(
@@ -54,8 +54,14 @@ const buildBody = (config, pr, checks, deployRes) => {
   if (passCheck && passDeploy)
     body.push(
       `In the meantime, please ensure that everything is working well. I have set up a [preview page](${
-        deployRes.entryUrl
+        ctx.deploy.entryUrl
       }) for you.`,
+      ''
+    )
+
+  if (!passCheck && passDeploy)
+    body.push(
+      `I have set up a [preview page](${ctx.deploy.entryUrl}) for you.`,
       ''
     )
 
@@ -74,18 +80,18 @@ const buildBody = (config, pr, checks, deployRes) => {
 
   if (
     passImageCheck &&
-    deployRes &&
-    deployRes.imageUrls &&
-    Object.keys(deployRes.imageUrls)[0]
+    ctx.deploy &&
+    ctx.deploy.imageUrls &&
+    Object.keys(ctx.deploy.imageUrls)[0]
   )
     body.push(
       'Those are the images that will be used for your game:',
-      Object.keys(deployRes.imageUrls)
+      Object.keys(ctx.deploy.imageUrls)
         .sort()
         .map(
           key =>
-            `[![image ${key}](${deployRes.imageUrls[key]})](${
-              deployRes.imageUrls[key]
+            `[![image ${key}](${ctx.deploy.imageUrls[key]})](${
+              ctx.deploy.imageUrls[key]
             })`
         )
         .join(' ')

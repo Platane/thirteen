@@ -1,5 +1,6 @@
 export * as aws from './aws'
 export * as github from './github'
+export * as browserstack from './browserstack'
 
 import path from 'path'
 

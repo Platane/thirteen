@@ -9,11 +9,13 @@
   "dependencies": {
     "aws-sdk": "2.348.0",
     "flow-aws-lambda": "1.0.3",
-    "get-pixels": "3.3.2",
+    "get-pixels": "^3.3.2",
     "github-app": "4.0.1",
     "joi": "14.0.4",
     "lodash.kebabcase": "4.1.1",
+    "node-fetch": "^2.3.0",
     "node-zip": "1.1.1",
+    "selenium-webdriver": "^4.0.0-alpha.1",
     "yaml": "1.0.0"
   },
   "devDependencies": {

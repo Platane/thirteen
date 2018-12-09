@@ -7,10 +7,12 @@ export const readImageFiles = (manifest, files) => {
   const imageFiles = {}
 
   Object.keys(manifest.images || {}).forEach(key => {
-    imageFiles[key] = files.find(
+    const file = files.find(
       ({ filename }) =>
         path.normalize(filename) === path.join(mainDir, manifest.images[key])
     )
+
+    if (file) imageFiles[key] = file
   })
 
   return imageFiles

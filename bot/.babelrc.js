@@ -12,6 +12,9 @@ const plugins = [
 
         'GITHUB_APP_ID',
         'GITHUB_APP_PRIVATE_KEY',
+
+        'BROWSER_STACK_USER',
+        'BROWSER_STACK_KEY',
       ],
     },
   ],
