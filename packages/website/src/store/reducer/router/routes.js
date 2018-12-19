@@ -1,5 +1,6 @@
 export const routes = [
   { path: '/', key: 'home' },
+  { path: '/search', key: 'search' },
   { path: '/edition/:editionSlug', key: 'edition' },
   { path: '/edition/:editionSlug/:category', key: 'edition' },
   { path: '/entries/:editionSlug', key: 'edition' },

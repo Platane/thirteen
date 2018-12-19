@@ -3,6 +3,7 @@ import React from 'react'
 import { Home } from '../_page/Home'
 import { Entry } from '../_page/Entry'
 import { Edition } from '../_page/Edition'
+import { Search } from '../_page/Search'
 import { Layout } from '../Layout'
 
 export const App = (props: { routerKey: string }) => (
@@ -21,6 +22,9 @@ const Content = ({ routerKey }) => {
 
     case 'edition':
       return <Edition />
+
+    case 'search':
+      return <Search />
 
     default:
       return <FourOFour />

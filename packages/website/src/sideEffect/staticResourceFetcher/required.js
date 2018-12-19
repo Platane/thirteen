@@ -14,8 +14,15 @@ const selectIndex = (state: State) => state.fetch.index
 const selectRequired = createSelector(
   selectCurrentEditionSlug,
   selectIndex,
+  state => state.router.key,
+  state => state.resource.editions,
 
-  (editionSlug, index): { resourceName: string, key: string }[] =>
+  (
+    editionSlug,
+    index,
+    routerKey,
+    editions
+  ): { resourceName: string, key: string }[] =>
     ([
       // editions
       {
@@ -31,6 +38,16 @@ const selectRequired = createSelector(
           editionSlug,
           index,
         },
+
+      // search
+      ...(routerKey === 'search'
+        ? (editions || []).map(editionSlug => ({
+            resourceName: 'entries',
+            key: `entries/${editionSlug}`,
+            editionSlug,
+            index,
+          }))
+        : []),
     ].filter(Boolean): any)
 )
 

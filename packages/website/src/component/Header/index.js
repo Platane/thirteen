@@ -9,6 +9,7 @@ const links = [
   { href: '/#prizes', label: 'Prizes' },
   { href: '/#rules', label: 'Rules' },
   { href: 'https://medium.com/js13kgames', label: 'Blog' },
+  { href: '/search', label: 'Search' },
 ]
 
 export const Header = () => (
