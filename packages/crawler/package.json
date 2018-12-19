@@ -1,0 +1,14 @@
+{
+  "name": "@thirteen/crawler",
+  "description": "Helper to crawl submission from the actual js13k website",
+  "version": "0.1.0",
+  "dependencies": {
+    "jsdom": "13.0.0",
+    "node-fetch": "2.3.0",
+    "node-zip": "1.1.1",
+    "puppeteer": "1.10.0"
+  },
+  "scripts": {
+    "start": "rm -rf ../../submission ; BABEL_ENV=node node -e \"require('@babel/register')({rootMode:'upward'});require('./src/index.js')()\""
+  }
+}
