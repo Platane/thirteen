@@ -1,0 +1,18 @@
+{
+  "name": "@thirteen/api-static",
+  "description": "...",
+  "version": "0.1.0",
+  "dependencies": {
+    "node-fetch": "2.3.0",
+    "mkdirp": "0.5.1"
+  },
+  "devDependencies": {
+    "tap-spec": "5.0.0",
+    "tape": "4.9.1"
+  },
+  "scripts": {
+    "test": "BABEL_ENV=node node -e \"require('@babel/register')({rootMode:'upward'});require('./src/__tests__')\" | tap-spec",
+    "start": "BABEL_ENV=node node -e \"require('@babel/register')({rootMode:'upward'});require('./src').create()\"",
+    "build": "rm -rf .build ; mkdir .build ; BABEL_ENV=node node -e \"require('@babel/register')({rootMode:'upward'});require('./src/build')\""
+  }
+}

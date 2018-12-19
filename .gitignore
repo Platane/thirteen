@@ -6,7 +6,6 @@ dist
 .build
 flow-typed
 .cache/
-lib-source
 public
 submission
 website/src/asset/
