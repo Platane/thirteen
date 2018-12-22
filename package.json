@@ -30,7 +30,8 @@
     "crawl": "lerna run --scope @thirteen/crawler start",
     "build:website": "lerna run --scope @thirteen/website build ; lerna run --scope @thirteen/api-static build ; lerna run --scope @thirteen/website-builder build",
     "start:website": "lerna run --scope @thirteen/website --scope @thirteen/api-static --parallel start",
-    "deploy:website": "( packages/website-builder ; yarn deploy )"
+    "deploy:website": "( cd packages/website-builder ; yarn deploy )",
+    "deploy:bot": "( cd packages/bot ; yarn deploy )"
   },
   "workspaces": [
     "packages/*"
