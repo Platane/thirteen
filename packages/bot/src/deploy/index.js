@@ -8,7 +8,7 @@ export const deploy = async ctx => {
   const slug = `submission/${sha}`
 
   const indexFile = ctx.bundleFiles.find(
-    ({ filename }) => ctx.manifest.bundle_index || 'index.html'
+    ({ filename }) => filename === (ctx.manifest.bundle_index || 'index.html')
   )
 
   /**
@@ -31,14 +31,18 @@ export const deploy = async ctx => {
    * upload game and game assets
    */
   const [gameUrl] = await Promise.all([
-    upload(`entry/${slug}/game/index.html`, Buffer.from(indexFile.content), {
-      ContentType: 'text/html',
-    }),
+    upload(
+      `entry/${slug}/game/index.html`,
+      Buffer.from(indexFile.contentBuffer),
+      {
+        ContentType: 'text/html',
+      }
+    ),
 
     ...ctx.bundleFiles
       .filter(x => x !== indexFile)
-      .map(({ filename, content }) =>
-        upload(`entry/${slug}/game/${filename}`, Buffer.from(content, 'base64'))
+      .map(({ filename, contentBuffer }) =>
+        upload(`entry/${slug}/game/${filename}`, Buffer.from(contentBuffer))
       ),
   ])
 

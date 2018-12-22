@@ -1,5 +1,6 @@
 import '../service/manifestSchema/__tests__/validateManifestSchema.test'
 import './valid.test'
+import './valid-nested-bundle.test'
 import './missing-image.test'
 import './invalid-image.test'
 import './large-bundle.test'
