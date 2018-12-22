@@ -1,7 +1,7 @@
 import { APP_NAME } from '../config/github'
 
 const createOrEditComment = async (github, pr, body) => {
-  const { data: comments } = await github.issues.getComments({
+  const { data: comments } = await github.issues.listComments({
     owner: pr.base.repo.owner.login,
     repo: pr.base.repo.name,
     number: pr.number,
@@ -18,7 +18,7 @@ const createOrEditComment = async (github, pr, body) => {
       body,
     })
   else
-    await github.issues.editComment({
+    await github.issues.updateComment({
       owner: pr.base.repo.owner.login,
       repo: pr.base.repo.name,
       comment_id: comment.id,
