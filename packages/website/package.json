@@ -5,7 +5,7 @@
   "scripts": {
     "test": "BABEL_ENV=node node -e \"require('@babel/register')({rootMode:'upward'});require('./src/__tests__/index.js')\" | tap-spec",
     "start": "webpack-dev-server --mode development --config ./script/webpack.config.js",
-    "build": "NODE_ENV=production BABEL_ENV=web webpack --mode production --config ./script/webpack.config.js"
+    "build": "NODE_ENV=production BABEL_ENV=web webpack --mode production --config ./script/webpack.config.js && cp src/asset/favicon.ico .build/favicon.ico"
   },
   "dependencies": {
     "declarative-router": "0.1.4",
