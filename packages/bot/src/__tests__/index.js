@@ -1,6 +1,8 @@
 import '../service/manifestSchema/__tests__/validateManifestSchema.test'
 import './valid.test'
 import './missing-image.test'
+import './invalid-image.test'
+import './large-bundle.test'
 import './game-error.test'
 import './no-manifest.test'
 import './mal-placed.test'
