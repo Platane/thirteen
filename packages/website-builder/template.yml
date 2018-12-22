@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  staticAssetBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods:
+              - GET
+            AllowedOrigins:
+              - '*'
+      WebsiteConfiguration:
+        ErrorDocument: index.html
+        IndexDocument: index.html
+
+Outputs:
+  staticAssetBucket:
+    Description: 'static asset bucket name'
+    Value: !Ref staticAssetBucket
+
+  s3Url:
+    Description: 'bucket public access url'
+    Value: !Sub 'https://${staticAssetBucket}.s3.${AWS::Region}.amazonaws.com'
+
+  websiteUrl:
+    Description: 'website url'
+    Value: !Sub 'http://${staticAssetBucket}.s3-website-${AWS::Region}.amazonaws.com'

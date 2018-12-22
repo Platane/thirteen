@@ -3,7 +3,8 @@
   "description": "...",
   "version": "0.1.0",
   "scripts": {
-    "build": "rm -rf .build ; mkdir .build ; BABEL_ENV=node node -e \"require('@babel/register')({cache:false,cwd:require('path').join(__dirname,'../..'),rootMode:'upward'});require('./src')\""
+    "build": "rm -rf .build ; mkdir .build ; BABEL_ENV=node node -e \"require('@babel/register')({cache:false,cwd:require('path').join(__dirname,'../..'),rootMode:'upward'});require('./src')\"",
+    "deploy": "./script/deploy.sh"
   },
   "dependencies": {
     "@thirteen/api-static": "0.1.0",

@@ -29,7 +29,8 @@
     "test": "lerna run test",
     "crawl": "lerna run --scope @thirteen/crawler start",
     "build:website": "lerna run --scope @thirteen/website build ; lerna run --scope @thirteen/api-static build ; lerna run --scope @thirteen/website-builder build",
-    "start:website": "lerna run --scope @thirteen/website --scope @thirteen/api-static --parallel start"
+    "start:website": "lerna run --scope @thirteen/website --scope @thirteen/api-static --parallel start",
+    "deploy:website": "( packages/website-builder ; yarn deploy )"
   },
   "workspaces": [
     "packages/*"
