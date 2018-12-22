@@ -72,7 +72,10 @@ export const check = async ({ deploy }) => {
   const networkLogs = await httpGet(
     `https://api.browserstack.com/automate/sessions/${session.getId()}/networklogs`,
     { user: BROWSER_STACK_USER, password: BROWSER_STACK_KEY }
-  )
+  ).catch(err => {
+    console.warn('fails to read network errors')
+    return { log: { entries: [] } }
+  })
 
   /**
    * look for error in the console

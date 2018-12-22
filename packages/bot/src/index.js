@@ -108,7 +108,7 @@ export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
 
         const res = await analyze(github, config, pull_request)
 
-        console.log(JSON.stringify(res.checks))
+        console.log(JSON.stringify(res && res.checks))
 
         return res
       }
@@ -118,7 +118,7 @@ export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
       if (['labeled', 'opened', 'edited'].includes(githubEventBody.action)) {
         const res = await analyze(github, config, githubEventBody.pull_request)
 
-        console.log(JSON.stringify(res.checks))
+        console.log(JSON.stringify(res && res.checks))
 
         return res
       }

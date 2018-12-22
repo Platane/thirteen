@@ -7,10 +7,9 @@ import { handler } from '../index'
 test('test missing image', async t => {
   const res = await handler(event)
 
-  t.assert(
-    !res.checks.every(({ result }) => result === 'success'),
-    'at least one test should fail'
-  )
+  const check = res.checks.find(({ key }) => key === 'valid-images')
+
+  t.equal(check.result, 'failure', 'valid-images check should fail')
 
   t.end()
 })
