@@ -7,7 +7,7 @@ import { STATIC_ENDPOINT } from '../../../config'
 export const pushInCache = (state, _, data) => {
   const editionBySlug = { ...state.editionBySlug }
   data.editions.forEach(
-    edition =>
+    ({ entriesChunk, ...edition }) =>
       (editionBySlug[edition.slug] = {
         ...(editionBySlug[edition.slug] || {}),
         ...edition,

@@ -27,85 +27,26 @@ export STATIC_BUCKET_NAME=`aws cloudformation describe-stacks --stack-name $STAC
 export S3_URL=`aws cloudformation describe-stacks --stack-name $STACKNAME \
   --query 'Stacks[0].Outputs[?OutputKey==\`s3Url\`].OutputValue' --output text`
 
-export WEBSITE_URL=`aws cloudformation describe-stacks --stack-name $STACKNAME \
+export APP_ORIGIN=`aws cloudformation describe-stacks --stack-name $STACKNAME \
   --query 'Stacks[0].Outputs[?OutputKey==\`websiteUrl\`].OutputValue' --output text`
 
-export APP_ORIGIN=$WEBSITE_URL
 export STATIC_ENDPOINT="$S3_URL/data"
 
-( cd ../../ ; yarn build:website )
 
-cp -r ../api-static/.build ../website-builder/.build/data
-cp -r ../website/.build/* ../website-builder/.build/
+# build and deploy the api static
+( cd ../api-static ; yarn build )
+rm -rf ../api-static/public
+mkdir ../api-static/public
+mv ../api-static/.build ../api-static/public/data
+./script/aws-cp.sh $STATIC_BUCKET_NAME ../api-static/public
 
-cd .build/
+# build and deploy the website static asssets
+( cd ../website ; yarn build )
+./script/aws-cp.sh $STATIC_BUCKET_NAME ../website/.build
 
-aws s3 cp --no-progress --recursive \
-  --acl "public-read" \
-  --cache-control 'max-age=31104000' \
-  --exclude "*.html" \
-  --exclude "*.json" \
-  --exclude "*.css" \
-  --exclude "*.js" \
-  ./ s3://$STATIC_BUCKET_NAME
-
-rm -rf gzip
-mkdir gzip
-
-for file in `find -name "*.html" -type f -or -name "*.json" -type f -or -name "*.css" -type f -or -name "*.js" -type f`; do
-
-  target=$(readlink -m gzip/$file )
-
-  mkdir -p $(dirname $target)
-
-  gzip -9 -c $file > $target
-done
-
-aws s3 cp --no-progress --recursive \
-  --acl "public-read" \
-  --content-encoding "gzip" \
-  --cache-control 'max-age=3600' \
-  --exclude "*" \
-  --include "*.html" \
-  --content-type "text/html" \
-  ./gzip/ s3://$STATIC_BUCKET_NAME
-
-aws s3 cp --no-progress --recursive \
-  --acl "public-read" \
-  --content-encoding "gzip" \
-  --cache-control 'max-age=31104000' \
-  --exclude "*" \
-  --include "*.css" \
-  --content-type "text/css" \
-  ./gzip/ s3://$STATIC_BUCKET_NAME
-
-aws s3 cp --no-progress --recursive \
-  --acl "public-read" \
-  --content-encoding "gzip" \
-  --cache-control 'max-age=31104000' \
-  --exclude "*" \
-  --include "*.json" \
-  --exclude "*/index.json" \
-  --content-type "application/json" \
-  ./gzip/ s3://$STATIC_BUCKET_NAME
-
-aws s3 cp --no-progress --recursive \
-  --acl "public-read" \
-  --content-encoding "gzip" \
-  --cache-control 'max-age=3600' \
-  --exclude "*" \
-  --include "*/index.json" \
-  --content-type "application/json" \
-  ./gzip/ s3://$STATIC_BUCKET_NAME
-
-aws s3 cp --no-progress --recursive \
-  --acl "public-read" \
-  --content-encoding "gzip" \
-  --cache-control 'max-age=31104000' \
-  --exclude "*" \
-  --include "*.js" \
-  --content-type "application/javascript" \
-  ./gzip/ s3://$STATIC_BUCKET_NAME
+# build and deploy the pages
+( cd ../website-builder ; yarn build )
+./script/aws-cp.sh $STATIC_BUCKET_NAME ../website-builder/.build
 
 
-echo $WEBSITE_URL
+echo $APP_ORIGIN

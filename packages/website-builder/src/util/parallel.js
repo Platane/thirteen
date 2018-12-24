@@ -1,3 +1,7 @@
+/**
+ * takes an array of functions that return promises
+ * run all the promises in batch
+ */
 export const parallel = (
   n: number,
   tasks: () => Promise<void>

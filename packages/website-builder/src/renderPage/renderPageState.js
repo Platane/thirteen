@@ -46,7 +46,7 @@ export const renderPageState = (state: State) => {
     title: selectMetaTitle(state),
     metaProperties: selectMetaProperties(state),
     scripts: getScriptsForEntry('index'),
-    styles: manifest['style.css'] ? [manifest['style.css']] : [],
+    styles: [manifest['style.css']].filter(Boolean),
     css,
     html,
     inlineScript,

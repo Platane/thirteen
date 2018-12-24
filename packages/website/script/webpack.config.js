@@ -4,11 +4,13 @@ const path = require('path')
 const http = require('http')
 const ManifestPlugin = require('webpack-manifest-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const production = process.env.NODE_ENV === 'production'
 
 const SUBMISSION_DIR_PATH = path.resolve(__dirname, '../../../submission')
+const BUILD_DIR_PATH = path.join(__dirname, '../.build')
 
 module.exports = {
   entry: {
@@ -19,7 +21,7 @@ module.exports = {
   },
 
   output: {
-    path: path.join(__dirname, '../.build'),
+    path: BUILD_DIR_PATH,
     filename: production ? '[name]-[hash:8].js' : '[name].js',
     publicPath: process.env.APP_BASENAME || '/',
   },
@@ -49,6 +51,10 @@ module.exports = {
   },
 
   plugins: [
+    new CleanWebpackPlugin([BUILD_DIR_PATH], {
+      root: path.resolve(__dirname, '..'),
+    }),
+
     new ManifestPlugin({ writeToFileEmit: true }),
 
     new HtmlWebpackPlugin({
@@ -74,6 +80,10 @@ module.exports = {
     watchOptions: {
       ignored: /node_modules/,
     },
+
+    /**
+     * serve static assets, such as images, from the submission directory
+     */
     before: app =>
       app.use('/entry/*/*/images/*', async (req, res) => {
         const { originalUrl } = req

@@ -5,17 +5,20 @@ import {
 import { selectToFetch } from '@thirteen/website/src/sideEffect/staticResourceFetcher/required'
 import type { State } from '@thirteen/website/src/store/type'
 
+/**
+ * prevent from sending a too large payload on the page
+ * trim resources that are not required by the page
+ */
 export const trimState = (state: State) => {
-  const editionSlug = selectCurrentEditionSlug(state)
   const entrySlug = selectCurrentEntrySlug(state)
 
   if (entrySlug) {
     const { resource } = state
 
     const editionBySlug = {}
-    ;(resource.editions || []).forEach(
-      slug => (editionBySlug[slug] = { categories: [], entries: null })
-    )
+    ;(resource.editions || []).forEach(slug => {
+      editionBySlug[slug] = { categories: [] }
+    })
 
     return {
       ...state,
