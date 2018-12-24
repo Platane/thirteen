@@ -4,7 +4,17 @@ import { defaultState } from '@thirteen/website/src/store/reducer'
 export const render = (slug, manifest) => {
   const [entrySlug1, entrySlug2] = slug.split('/')
 
-  return renderPageState({
+  const entry = {
+    categories: [],
+    ...manifest,
+    slug,
+    images: {},
+  }
+  Object.keys(manifest.images || {}).forEach(key => {
+    entry.images[key] = path.join('images', manifst.images[key])
+  })
+
+  const state = {
     ...defaultState,
     router: {
       ...defaultState.router,
@@ -18,8 +28,10 @@ export const render = (slug, manifest) => {
     resource: {
       ...defaultState.resource,
       entryBySlug: {
-        [slug]: { slug, categories: [], ...manifest },
+        [slug]: entry,
       },
     },
-  })
+  }
+
+  return renderPageState(state)
 }
