@@ -31,6 +31,7 @@ export const selectSearchResult = createSelector(
       const text = [
         entry.title,
         entry.slug.split('/')[0],
+        ...entry.authors.map(({ name }) => name),
         ...entry.categories,
       ].join(' ')
 

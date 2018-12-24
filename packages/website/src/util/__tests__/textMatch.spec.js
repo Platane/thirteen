@@ -6,6 +6,7 @@ test('textMatch', t => {
     ['hello', 'hello', true],
     ['banana', 'hello', false],
     ['hel', 'hello', true],
+    ['hel ', 'hello', false],
     ['23 hel', 'hello 23', true],
     ['23 hel', 'hello 235', false],
     ['22a  HeLlo   ', 'helLO 22A', true],

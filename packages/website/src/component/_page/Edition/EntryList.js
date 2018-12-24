@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from '../../Link'
 
-const Entry = ({ entry, onMouseOver }) => (
+export const Entry = ({ entry, onMouseOver }) => (
   <article className="entry" onMouseOver={onMouseOver}>
     <Link href={`/entry/${entry.slug}`}>
       <img src={entry.images.small} alt={entry.title} />

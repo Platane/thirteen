@@ -11,14 +11,19 @@ export const textMatch = (pattern, text) => {
     .split(' ')
     .filter(Boolean)
 
-  const firsts = patternW.slice(0, patternW.length - 1)
-  const last = patternW[patternW.length - 1]
+  const completeW = patternW.slice(0, patternW.length - 1)
+  let partialW = patternW[patternW.length - 1]
+
+  if (pattern[pattern.length - 1] === ' ') {
+    completeW.push(partialW)
+    partialW = null
+  }
 
   const score =
-    firsts.reduce(
+    completeW.reduce(
       (sum, p) => sum + Math.max(...textW.map(t => textEqual(t, p))),
       0
-    ) + Math.max(...textW.map(t => textPrefix(t, last)))
+    ) + (partialW ? Math.max(...textW.map(t => textPrefix(t, partialW))) : 0)
 
   return score / patternW.length > 0.99
 }

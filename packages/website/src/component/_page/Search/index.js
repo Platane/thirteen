@@ -10,7 +10,18 @@ import { goTo } from '../../../store/action/router'
 
 import type { State } from '../../../store/type'
 
-const setSearchParam = searchParam => goTo('/search', searchParam)
+const trimFalsyValue = o => {
+  const copy = {}
+  Object.keys(o)
+    .filter(key => o[key])
+    .forEach(key => {
+      copy[key] = o[key]
+    })
+  return copy
+}
+
+const setSearchParam = searchParam =>
+  goTo('/search', trimFalsyValue(searchParam))
 
 const withSetter = C =>
   class extends React.Component {

@@ -1,28 +1,41 @@
 import React from 'react'
 
+import { EntryList } from '../Edition/EntryList'
+
+const EmptySearchHint = () => <h3 style={hintStyle}>Type a search term</h3>
+
+const NoResultHint = () => (
+  <h3 style={hintStyle}>
+    No match
+    <br />
+    :(
+  </h3>
+)
+
+const hintStyle = {
+  margin: '32px',
+}
+
 export const Search = ({ searchParam, entries, setQuery }) => (
   <div>
     <input
-      type="text"
+      type="search"
+      placeholder="Entry name, edition, author ..."
+      style={inputStyle}
       value={searchParam.query}
       onChange={e => setQuery(e.target.value)}
     />
 
-    <pre>{JSON.stringify(searchParam, null, 2)}</pre>
+    {searchParam.query && entries.length === 0 && <NoResultHint />}
 
-    <ul>
-      {entries.slice(0, 20).map(entry => (
-        <li key={entry.slug} style={oneLine}>
-          {entry.slug} - {entry.title}
-        </li>
-      ))}
-    </ul>
+    {!searchParam.query && <EmptySearchHint />}
+
+    <EntryList entries={entries.slice(0, 20)} preloadEntry={() => 0} />
   </div>
 )
 
-const oneLine = {
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  marginBottom: '4px',
+const inputStyle = {
+  width: 'calc( 100% - 64px )',
+  padding: '10px',
+  margin: '32px',
 }
