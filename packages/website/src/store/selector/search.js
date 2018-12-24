@@ -21,20 +21,22 @@ export const selectSearchResult = createSelector(
   selectResourceState,
   selectSearchParam,
   ({ entryBySlug }, { query, category, edition }) =>
-    Object.values(entryBySlug).filter(entry => {
-      if (category && category.every(c => !entry.categories.includes(c)))
-        return false
+    Object.values(entryBySlug)
+      .sort((a, b) => (a.slug < b.slug ? 1 : -1))
+      .filter(entry => {
+        if (category && category.every(c => !entry.categories.includes(c)))
+          return false
 
-      if (edition && edition.every(c => !entry.startsWith(edition)))
-        return false
+        if (edition && edition.every(c => !entry.startsWith(edition)))
+          return false
 
-      const text = [
-        entry.title,
-        entry.slug.split('/')[0],
-        ...entry.authors.map(({ name }) => name),
-        ...entry.categories,
-      ].join(' ')
+        const text = [
+          entry.title,
+          entry.slug.split('/')[0],
+          ...entry.authors.map(({ name }) => name),
+          ...entry.categories,
+        ].join(' ')
 
-      return textMatch(query, text)
-    })
+        return textMatch(query, text)
+      })
 )
