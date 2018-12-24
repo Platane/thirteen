@@ -9,7 +9,13 @@ test('test illegal request', async t => {
 
   const check = res.checks.find(({ key }) => key === 'game-run')
 
-  t.equal(check.result, 'failure', 'game-run check should fail')
+  const checkFailed = check.result === 'failure'
+  const checkWarning = check.detail.includes('⚠️')
+
+  t.assert(
+    checkFailed || checkWarning,
+    'game-run check should fail, or at least display a warning'
+  )
 
   t.end()
 })

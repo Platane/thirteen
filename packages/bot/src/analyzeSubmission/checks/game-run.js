@@ -74,7 +74,7 @@ export const check = async ({ deploy }) => {
     { user: BROWSER_STACK_USER, password: BROWSER_STACK_KEY }
   ).catch(err => {
     console.warn('fails to read network errors')
-    return { log: { entries: [] } }
+    return null
   })
 
   /**
@@ -96,23 +96,27 @@ export const check = async ({ deploy }) => {
    * check the network log for external resource call
    * ( which is obviously prohibited )
    * ( expect from the favicon.ico, i guess that's ok )
+   *
+   *  need to have a defensive check on "networkLogs" existance in case browserstack fails
    */
-  const externalUrls = networkLogs.log.entries
-    .map(({ request }) => request.url)
-    .filter(
-      url =>
-        !url.startsWith(path.dirname(deploy.gameUrl)) &&
-        path.basename(url) !== 'favicon.ico'
-    )
+  if (networkLogs && networkLogs.logs) {
+    const externalUrls = networkLogs.log.entries
+      .map(({ request }) => request.url)
+      .filter(
+        url =>
+          !url.startsWith(path.dirname(deploy.gameUrl)) &&
+          path.basename(url) !== 'favicon.ico'
+      )
 
-  if (externalUrls.length > 0)
-    return {
-      result: 'failure',
-      detail: [
-        'Game tried to access external resources',
-        ...externalUrls.map(url => ` * ${url}`),
-      ].join('\n'),
-    }
+    if (externalUrls.length > 0)
+      return {
+        result: 'failure',
+        detail: [
+          'Game tried to access external resources',
+          ...externalUrls.map(url => ` * ${url}`),
+        ].join('\n'),
+      }
+  }
 
   /**
    * check that the first thing displayed is no a blank page
@@ -132,8 +136,12 @@ export const check = async ({ deploy }) => {
    */
   return {
     result: 'success',
-    detail:
-      'The game does not required external resources at loading.\nIt does not have critical errors and seens to display a start screen.',
+    detail: [
+      'The game does not required external resources at loading.',
+      'It does not have critical errors and seens to display a start screen.',
+      !networkLogs &&
+        '\n⚠️ Could not get the network logs, external api call check has been disable',
+    ].join('\n'),
   }
 }
 

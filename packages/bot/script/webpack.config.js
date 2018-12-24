@@ -35,7 +35,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin([buildDir]),
+    new CleanWebpackPlugin([buildDir], { root: path.resolve(__dirname, '..') }),
     new ZipPlugin({ filename: 'bundle.zip' }),
   ],
 }
