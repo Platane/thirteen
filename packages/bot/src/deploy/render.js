@@ -1,5 +1,6 @@
 import { renderPageState } from '@thirteen/website-builder'
 import { defaultState } from '@thirteen/website/src/store/reducer'
+import path from 'path'
 
 export const render = (slug, manifest) => {
   const [entrySlug1, entrySlug2] = slug.split('/')
@@ -11,7 +12,10 @@ export const render = (slug, manifest) => {
     images: {},
   }
   Object.keys(manifest.images || {}).forEach(key => {
-    entry.images[key] = path.join('images', manifst.images[key])
+    entry.images[key] = path.join(
+      'images',
+      key + path.extname(manifest.images[key])
+    )
   })
 
   const state = {

@@ -141,7 +141,9 @@ export const check = async ({ deploy }) => {
       'It does not have critical errors and seens to display a start screen.',
       !networkLogs &&
         '\n⚠️ Could not get the network logs, external api call check has been disable',
-    ].join('\n'),
+    ]
+      .filter(Boolean)
+      .join('\n'),
   }
 }
 
