@@ -10,21 +10,10 @@ const core = {
       'transform-inline-environment-variables',
       {
         include: [
-          'PORT',
+          'APP_BASENAME',
           'GRAPHQL_ENDPOINT',
           'STATIC_ENDPOINT',
-          'APP_BASENAME',
           'APP_ORIGIN',
-
-          'AWS_ACCESS_KEY_ID',
-          'AWS_SECRET_ACCESS_KEY',
-          'AWS_DEFAULT_REGION',
-
-          'GITHUB_APP_ID',
-          'GITHUB_APP_PRIVATE_KEY',
-
-          'BROWSER_STACK_USER',
-          'BROWSER_STACK_KEY',
         ],
       },
     ],

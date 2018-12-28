@@ -1,7 +1,7 @@
 [ignore]
 .*/node_modules/.*
-.*/dist/.*
-.*/lib/.*
+.*/public/.*
+.*/.build/.*
 
 [libs]
 

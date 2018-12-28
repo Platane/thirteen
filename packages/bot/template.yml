@@ -1,11 +1,21 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
+Parameters:
+  githubAppId:
+    Type: String
+  githubAppPrivateKey:
+    Type: String
+  browserStackUser:
+    Type: String
+  browserStackKey:
+    Type: String
+
 Globals:
   Function:
     Handler: index.handler
     Runtime: nodejs8.10
-    Timeout: 30
+    Timeout: 60
     MemorySize: 256
     Environment:
       Variables:
@@ -15,10 +25,15 @@ Resources:
   githubWebhook:
     Type: AWS::Serverless::Function
     Properties:
+      Role: !GetAtt lambdaRole.Arn
       CodeUri: ./.build/bundle.zip
       Environment:
         Variables:
           SUBMISSION_BUCKET_NAME: !Ref staticAssetBucket
+          GITHUB_APP_ID: !Ref githubAppId
+          GITHUB_APP_PRIVATE_KEY: !Ref githubAppPrivateKey
+          BROWSER_STACK_USER: !Ref browserStackUser
+          BROWSER_STACK_KEY: !Ref browserStackKey
       Events:
         webhook:
           Type: Api
@@ -39,6 +54,33 @@ Resources:
       WebsiteConfiguration:
         ErrorDocument: index.html
         IndexDocument: index.html
+
+  lambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: allow-access-to-lambda-from-appsync
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:*'
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 's3:*'
+                Resource:
+                  - !Sub '${staticAssetBucket.Arn}'
+                  - !Sub '${staticAssetBucket.Arn}/*'
 
 Outputs:
   staticAssetBucket:

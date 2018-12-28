@@ -1,12 +1,8 @@
 node_modules
 npm-debug.log*
 yarn-error.log*
-lib
-dist
 .build
 flow-typed
 .cache/
 public
 submission
-website/src/asset/
-_package.json

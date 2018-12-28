@@ -6,7 +6,6 @@ set -e
 export STACKNAME=${STACKNAME:-'thirteen-bot'}
 export TEMP_BUCKET_NAME="dunelm-template-adsiasdiias123"
 
-
 # build bot
 yarn build
 
@@ -17,6 +16,11 @@ aws cloudformation package \
   --output-template-file .build/packaged-template.yml
 
 aws cloudformation deploy \
+  --parameter-overrides \
+      githubAppId=$GITHUB_APP_ID \
+      githubAppPrivateKey="$GITHUB_APP_PRIVATE_KEY" \
+      browserStackUser=$BROWSER_STACK_USER \
+      browserStackKey=$BROWSER_STACK_KEY \
   --no-fail-on-empty-changeset \
   --template-file .build/packaged-template.yml \
   --stack-name $STACKNAME \
@@ -43,6 +47,11 @@ aws cloudformation package \
   --output-template-file .build/packaged-template.yml
 
 aws cloudformation deploy \
+  --parameter-overrides \
+      githubAppId=$GITHUB_APP_ID \
+      githubAppPrivateKey="$GITHUB_APP_PRIVATE_KEY" \
+      browserStackUser=$BROWSER_STACK_USER \
+      browserStackKey=$BROWSER_STACK_KEY \
   --no-fail-on-empty-changeset \
   --template-file .build/packaged-template.yml \
   --stack-name $STACKNAME \
