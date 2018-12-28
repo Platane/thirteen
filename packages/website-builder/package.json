@@ -9,8 +9,7 @@
   "dependencies": {
     "@thirteen/api-static": "0.1.0",
     "@thirteen/website": "0.1.0",
-    "emotion-server": "9.2.12",
     "node-fetch": "2.3.0",
-    "serialize-javascript": "1.5.0"
+    "serialize-javascript": "1.6.1"
   }
 }

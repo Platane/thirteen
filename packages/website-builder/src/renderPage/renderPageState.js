@@ -9,7 +9,6 @@ import stats from '@thirteen/website/.build/stats.json'
 import manifest from '@thirteen/website/.build/manifest.json'
 import { Provider } from 'react-redux'
 import { renderToString } from 'react-dom/server'
-import { extractCritical } from 'emotion-server'
 import serialize from 'serialize-javascript'
 
 import type { State } from '~/store/type'
@@ -35,10 +34,9 @@ export const renderPageState = (state: State) => {
     </Provider>
   )
 
-  const { html, css, ids } = extractCritical(renderToString(app))
+  const html = renderToString(app)
 
   const inlineScript = [
-    `window._THIRTEEN_EMOTION_IDS=${serialize(ids)};`,
     `window._THIRTEEN_STATE=${serialize(state)};`,
   ].join('')
 
@@ -47,7 +45,7 @@ export const renderPageState = (state: State) => {
     metaProperties: selectMetaProperties(state),
     scripts: getScriptsForEntry('index'),
     styles: [manifest['style.css']].filter(Boolean),
-    css,
+    css: '',
     html,
     inlineScript,
   })
