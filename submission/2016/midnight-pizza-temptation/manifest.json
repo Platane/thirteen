@@ -1,0 +1,22 @@
+{
+  "title": "midnight pizza temptation",
+  "description": "One button game,\n\n\t\t\t\t\tPress any letter key to control a carrier.\nDeliver pizza to location marked on your map.\nFeatures pizza rain and pizza explosion !\nPlay with up to 25 friend on the same keyboard !*\n* assuming your keyboard supports anti-ghosting and you and your friends enjoy meaningless games.",
+  "categories": [
+    "desktop"
+  ],
+  "authors": [
+    {
+      "name": "platane",
+      "twitter": "platane_",
+      "website": "http://platane.me/",
+      "github": "Platane"
+    }
+  ],
+  "github_repository": "Platane/midnight-pizza-temptation",
+  "bundle_path": "bundle.zip",
+  "bundle_index": "index.html",
+  "images": {
+    "small": "images/small.jpg",
+    "big": "images/big.jpg"
+  }
+}

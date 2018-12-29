@@ -1,0 +1,22 @@
+{
+  "title": "Vernissage",
+  "description": "You are lost in a museum.\nFind your way out, take some times to look at the painting. It might guide you!\nDesktop:\n\n\t\t\t\t\tLook with clic + mouse\n\n\t\t\t\t\tMove forward with the space bar\nMobile:\n\n\t\t\t\t\tMove forward by touching\nCardboard:\n\n\t\t\t\t\tMove forward with the magnetic button",
+  "categories": [
+    "a-frame"
+  ],
+  "authors": [
+    {
+      "name": "platane",
+      "twitter": "platane_",
+      "website": "https://github.com/Platane",
+      "github": "Platane"
+    }
+  ],
+  "github_repository": "Platane/js13k-2017",
+  "bundle_path": "bundle.zip",
+  "bundle_index": "index.html",
+  "images": {
+    "small": "images/small.jpg",
+    "big": "images/big.jpg"
+  }
+}

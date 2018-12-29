@@ -1,0 +1,23 @@
+{
+  "title": "Sushi Kitchen",
+  "description": "Command a fleet of cook to craft sushi! \nBuy new machines, hired more crew, expand your kitchen.\nThis is a management game.\nManual:\n\n\t\t\t\t\tEach machine have a recipe to transform inputs into something else.\nWorker can do two activities:\n\n\t\t\t\t\t - activate a machine ( click on the worker, then click on the machine )\n\n\t\t\t\t\t - carry something from a point A to point B ( click on the worker, then drag from A to B )",
+  "categories": [
+    "desktop",
+    "mobile"
+  ],
+  "authors": [
+    {
+      "name": "Platane",
+      "twitter": "platane_",
+      "website": "https://platane.github.io/",
+      "github": "Platane"
+    }
+  ],
+  "github_repository": "Platane/js13k-2018",
+  "bundle_path": "bundle.zip",
+  "bundle_index": "index.html",
+  "images": {
+    "small": "images/small.jpg",
+    "big": "images/big.jpg"
+  }
+}
