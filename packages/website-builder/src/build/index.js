@@ -43,7 +43,10 @@ export const writeAllPages = async () => {
     '',
   ]
 
-  await parallel(8, urls.map(url => () => console.log(url) || writePage(url)))
+  await parallel(
+    8,
+    urls.map(url => () => console.log(url || '/') || writePage(url))
+  )
 
   console.log('copy game assets')
   await parallel(8, entries.map(e => () => copyGameAssets(BUILD_DIR, e)))

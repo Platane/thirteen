@@ -5,7 +5,11 @@ set -e
 rm -rf .build
 mkdir .build
 
-export STACKNAME=${STACKNAME:-'thirteen-website'}
+export SHA=${CIRCLE_SHA1:-'hello'}
+export STACKNAME="thirteen-website-$SHA"
+export DOMAIN="yellow-sail-lab.de"
+export SUBDOMAIN="$SHA.website-thirteen"
+
 export TEMP_BUCKET_NAME="dunelm-template-adsiasdiias123"
 
 # package app + deploy
@@ -16,6 +20,9 @@ aws cloudformation package \
 
 aws cloudformation deploy \
   --no-fail-on-empty-changeset \
+  --parameter-overrides \
+    Domain=$DOMAIN \
+    SubDomain=$SUBDOMAIN \
   --template-file .build/packaged-template.yml \
   --stack-name $STACKNAME \
   --capabilities CAPABILITY_IAM
@@ -24,13 +31,6 @@ aws cloudformation deploy \
 export STATIC_BUCKET_NAME=`aws cloudformation describe-stacks --stack-name $STACKNAME \
   --query 'Stacks[0].Outputs[?OutputKey==\`staticAssetBucket\`].OutputValue' --output text`
 
-export S3_URL=`aws cloudformation describe-stacks --stack-name $STACKNAME \
-  --query 'Stacks[0].Outputs[?OutputKey==\`s3Url\`].OutputValue' --output text`
-
-export APP_ORIGIN=`aws cloudformation describe-stacks --stack-name $STACKNAME \
-  --query 'Stacks[0].Outputs[?OutputKey==\`websiteUrl\`].OutputValue' --output text`
-
-export STATIC_ENDPOINT="$S3_URL/data"
 
 
 # build and deploy the api static
@@ -45,6 +45,11 @@ mv ../api-static/.build ../api-static/public/data
 ./script/aws-cp.sh $STATIC_BUCKET_NAME ../website/.build
 
 # build and deploy the pages
+export APP_BASENAME="/"
+export APP_ORIGIN=`aws cloudformation describe-stacks \
+  --stack-name $STACKNAME \
+  --query 'Stacks[0].Outputs[?OutputKey==\`websiteUrl\`].OutputValue' \
+  --output text`
 ( cd ../website-builder ; yarn build )
 ./script/aws-cp.sh $STATIC_BUCKET_NAME ../website-builder/.build
 

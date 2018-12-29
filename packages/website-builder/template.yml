@@ -1,10 +1,21 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
+Parameters:
+  Domain:
+    Type: String
+    Description: 'base domain, without any subdomain'
+    AllowedPattern: (?!-)[a-zA-Z0-9-.]{1,63}(?<!-)
+
+  SubDomain:
+    Type: String
+    Description: 'subdomain'
+
 Resources:
   staticAssetBucket:
     Type: AWS::S3::Bucket
     Properties:
+      BucketName: !Sub '${SubDomain}.${Domain}'
       AccessControl: PublicRead
       CorsConfiguration:
         CorsRules:

@@ -11,9 +11,6 @@ const core = {
       {
         include: [
           'APP_BASENAME',
-          'GRAPHQL_ENDPOINT',
-          'STATIC_ENDPOINT',
-          'APP_ORIGIN',
         ],
       },
     ],
