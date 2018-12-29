@@ -5,11 +5,18 @@ references:
 
   node_image: &node_image circleci/node:8.10
 
+  node_aws_image: &node_aws_image meetup/node-awscli
+
   attach_workspace: &attach_workspace
 
   node_config: &node_config
     docker:
       - image: *node_image
+    working_directory: *workspace_root
+
+  node_aws_config: &node_aws_config
+    docker:
+      - image: *node_aws_image
     working_directory: *workspace_root
 
 jobs:
@@ -44,10 +51,14 @@ jobs:
       - run: yarn lerna run --scope @thirteen/website --scope @thirteen/website-builder --scope @thirteen/api-static test
 
   deploy-website:
-    <<: *node_config
+    <<: *node_aws_config
     steps:
       - attach_workspace:
           at: .
+
+      - run: |
+          aws --version
+          node --version
 
       - run: yarn deploy:website
 
