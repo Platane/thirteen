@@ -5,7 +5,7 @@ set -e
 rm -rf .build
 mkdir .build
 
-export SHA=${CIRCLE_SHA1:-'hello'}
+export SHA=`echo ${CIRCLE_SHA1:-'hello'} | cut -c 1-7`
 export STACKNAME="thirteen-website-$SHA"
 export DOMAIN="yellow-sail-lab.de"
 export SUBDOMAIN="$SHA.website-thirteen"
@@ -23,6 +23,11 @@ aws cloudformation deploy \
   --parameter-overrides \
     Domain=$DOMAIN \
     SubDomain=$SUBDOMAIN \
+  --tags \
+    COMMIT_SHA1=$CIRCLE_SHA1 \
+    BRANCH=$CIRCLE_BRANCH \
+    BUILD_NUM=$CIRCLE_BUILD_NUM \
+    APP="thirteen-website" \
   --template-file .build/packaged-template.yml \
   --stack-name $STACKNAME \
   --capabilities CAPABILITY_IAM
@@ -36,7 +41,7 @@ cp -r ../api-static/.build public/data
 
 # build the website static asssets
 ( cd ../website ; yarn build )
-cp -r ../website/.build public
+cp -r ../website/.build/* public/
 
 # build the pages
 export APP_BASENAME="/"
@@ -45,7 +50,7 @@ export APP_ORIGIN=`aws cloudformation describe-stacks \
 --query 'Stacks[0].Outputs[?OutputKey==\`websiteUrl\`].OutputValue' \
 --output text`
 ( cd ../website-builder ; yarn build )
-cp -r ../website-builder/.build public
+cp -r ../website-builder/.build/* public/
 
 # deploy
 export STATIC_BUCKET_NAME=`aws cloudformation describe-stacks --stack-name $STACKNAME \
