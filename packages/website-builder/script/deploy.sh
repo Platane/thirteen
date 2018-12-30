@@ -27,31 +27,30 @@ aws cloudformation deploy \
   --stack-name $STACKNAME \
   --capabilities CAPABILITY_IAM
 
+rm -rf public
+mkdir public
 
+# build the api static
+( cd ../api-static ; yarn build )
+cp -r ../api-static/.build public/data
+
+# build the website static asssets
+( cd ../website ; yarn build )
+cp -r ../website/.build public
+
+# build the pages
+export APP_BASENAME="/"
+export APP_ORIGIN=`aws cloudformation describe-stacks \
+--stack-name $STACKNAME \
+--query 'Stacks[0].Outputs[?OutputKey==\`websiteUrl\`].OutputValue' \
+--output text`
+( cd ../website-builder ; yarn build )
+cp -r ../website-builder/.build public
+
+# deploy
 export STATIC_BUCKET_NAME=`aws cloudformation describe-stacks --stack-name $STACKNAME \
   --query 'Stacks[0].Outputs[?OutputKey==\`staticAssetBucket\`].OutputValue' --output text`
 
-
-
-# build and deploy the api static
-( cd ../api-static ; yarn build )
-rm -rf ../api-static/public
-mkdir ../api-static/public
-mv ../api-static/.build ../api-static/public/data
-./script/aws-cp.sh $STATIC_BUCKET_NAME ../api-static/public
-
-# build and deploy the website static asssets
-( cd ../website ; yarn build )
-./script/aws-cp.sh $STATIC_BUCKET_NAME ../website/.build
-
-# build and deploy the pages
-export APP_BASENAME="/"
-export APP_ORIGIN=`aws cloudformation describe-stacks \
-  --stack-name $STACKNAME \
-  --query 'Stacks[0].Outputs[?OutputKey==\`websiteUrl\`].OutputValue' \
-  --output text`
-( cd ../website-builder ; yarn build )
-./script/aws-cp.sh $STATIC_BUCKET_NAME ../website-builder/.build
-
+./script/aws-cp.sh $STATIC_BUCKET_NAME public
 
 echo $APP_ORIGIN

@@ -15,7 +15,7 @@ const headers = {
   'access-control-allow-origin': '*',
 }
 
-export const create = () =>
+export const create = ({ silent } = {}) =>
   new Promise(resolve => {
     const files = getFiles()
 
@@ -25,7 +25,7 @@ export const create = () =>
 
         const filename = url.pathname.split('/').slice(-1)[0]
 
-        console.log(filename)
+        if (!silent) console.log(filename)
 
         const file = files.find(x => x.filename === filename)
 
