@@ -2,6 +2,13 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
+  Domain:
+    Type: String
+    Description: 'base domain, without any subdomain'
+    AllowedPattern: (?!-)[a-zA-Z0-9-.]{1,63}(?<!-)
+  SubDomain:
+    Type: String
+    Description: 'subdomain'
   githubAppId:
     Type: String
   githubAppPrivateKey:
@@ -11,22 +18,16 @@ Parameters:
   browserStackKey:
     Type: String
 
-Globals:
-  Function:
-    Handler: index.handler
-    Runtime: nodejs8.10
-    Timeout: 60
-    MemorySize: 256
-    Environment:
-      Variables:
-        DEBUG: info
-
 Resources:
   githubWebhook:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt lambdaRole.Arn
       CodeUri: ./.build/bundle.zip
+      Handler: index.handler
+      Runtime: nodejs8.10
+      Timeout: 60
+      MemorySize: 256
       Environment:
         Variables:
           SUBMISSION_BUCKET_NAME: !Ref staticAssetBucket
@@ -34,6 +35,8 @@ Resources:
           GITHUB_APP_PRIVATE_KEY: !Ref githubAppPrivateKey
           BROWSER_STACK_USER: !Ref browserStackUser
           BROWSER_STACK_KEY: !Ref browserStackKey
+          DEBUG: info
+          APP_ORIGIN: !Sub 'http://${staticAssetBucket}.s3-website-${AWS::Region}.amazonaws.com'
       Events:
         webhook:
           Type: Api
@@ -44,6 +47,7 @@ Resources:
   staticAssetBucket:
     Type: AWS::S3::Bucket
     Properties:
+      BucketName: !Sub '${SubDomain}.${Domain}'
       AccessControl: PublicRead
       CorsConfiguration:
         CorsRules:

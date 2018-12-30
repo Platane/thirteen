@@ -24,9 +24,9 @@ aws cloudformation deploy \
     Domain=$DOMAIN \
     SubDomain=$SUBDOMAIN \
   --tags \
-    COMMIT_SHA1=$CIRCLE_SHA1 \
-    BRANCH=$CIRCLE_BRANCH \
-    BUILD_NUM=$CIRCLE_BUILD_NUM \
+    COMMIT_SHA1=${CIRCLE_SHA1:-'-'} \
+    BRANCH=${CIRCLE_BRANCH:-'-'} \
+    BUILD_NUM=${CIRCLE_BUILD_NUM:-'-'} \
     APP="thirteen-website" \
   --template-file .build/packaged-template.yml \
   --stack-name $STACKNAME \
