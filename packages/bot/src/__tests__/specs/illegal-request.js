@@ -1,12 +1,8 @@
-import test from 'tape'
+export { event } from './__fixtures__/illegal-request'
 
-import { event } from '../__fixtures__/illegal-request'
+export const label = 'test illegal request'
 
-import { handler } from '../index'
-
-test('test illegal request', async t => {
-  const res = await handler(event)
-
+export const check = t => res => {
   const check = res.checks.find(({ key }) => key === 'game-run')
 
   const checkFailed = check.result === 'failure'
@@ -16,6 +12,4 @@ test('test illegal request', async t => {
     checkFailed || checkWarning,
     'game-run check should fail, or at least display a warning'
   )
-
-  t.end()
-})
+}

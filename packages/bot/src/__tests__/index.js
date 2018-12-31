@@ -1,12 +1,13 @@
 import '../service/manifestSchema/__tests__/validateManifestSchema.test'
-import './valid.test'
-import './valid-nested-bundle.test'
-import './mal-placed.test'
-import './no-manifest.test'
-import './malformed-manifest.test'
-import './missing-image.test'
-import './invalid-image.test'
-import './large-bundle.test'
-import './game-error.test'
-import './blank-game.test'
-import './illegal-request.test'
+
+import test from 'tape'
+import { specs } from './specs'
+import { handler } from '../index'
+
+specs.forEach(({ label, event, check }) =>
+  test(label, async t => {
+    check(t)(await handler(event))
+
+    t.end()
+  })
+)
