@@ -83,6 +83,11 @@ export const check = async ({ deploy }) => {
   const criticalLogs = browserLogs
     .map(x => x.toJSON())
     .filter(({ level }) => ['SEVERE'].includes(level))
+    .filter(
+      ({ message }) =>
+        !(message.includes('favicon.ico') && message.includes('403'))
+    )
+
   if (criticalLogs.length > 0)
     return {
       result: 'failure',
