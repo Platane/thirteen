@@ -26,7 +26,8 @@
     "zip-webpack-plugin": "3.0.0"
   },
   "scripts": {
-    "test": "SUBMISSION_BUCKET_NAME=thirteen-bot-staticassetbucket-1jsorj1gcz5zj BABEL_ENV=node node -e \"require('@babel/register')({cache:false,cwd:require('path').join(__dirname,'../..'),rootMode:'upward'});require('./src/__tests__')\" | tap-spec",
+    "test:integration": "BABEL_ENV=node node -e \"require('@babel/register')({cache:false,cwd:require('path').join(__dirname,'../..'),rootMode:'upward'});require('./src/__tests__/integration').run(process.env.GITHUB_WEBHOOK_ENDPOINT)\" | tap-spec",
+    "test": "SUBMISSION_BUCKET_NAME=dunelm-template-adsiasdiias123 BABEL_ENV=node node -e \"require('@babel/register')({cache:false,cwd:require('path').join(__dirname,'../..'),rootMode:'upward'});require('./src/__tests__')\" | tap-spec",
     "build": "webpack --config ./script/webpack.config.js",
     "deploy": "./script/deploy.sh"
   }

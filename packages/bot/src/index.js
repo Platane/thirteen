@@ -67,7 +67,7 @@ const readHeader = (headers, name) =>
     Object.keys(headers).find(x => x.toLowerCase() === name.toLowerCase())
   ]
 
-export const handler = async (e: APIGatewayEvent): Promise<ProxyResult> => {
+export const handler = async (e: APIGatewayEvent) => {
   const githubEventName = readHeader(e.headers, 'X-GitHub-Event')
 
   const githubEventBody = JSON.parse(e.body)
