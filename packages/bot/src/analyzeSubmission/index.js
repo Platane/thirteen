@@ -1,6 +1,7 @@
 import path from 'path'
 
 const checks = [
+  require('./checks/source-repository'),
   require('./checks/valid-manifest'),
   require('./checks/file-structure'),
   require('./checks/bundle-size'),
